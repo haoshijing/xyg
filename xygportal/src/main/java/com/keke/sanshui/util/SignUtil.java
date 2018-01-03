@@ -154,11 +154,11 @@ public class SignUtil {
         return  md5Sign;
     }
 
-    public final  static  String createSign(String orderId,Integer gUid,String rechargeMoney,String key){
+    public final  static  String createSign(String orderId,Integer gUid,String rechargeDiamond,String key){
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("OrderId=").append(orderId).append("&");
         stringBuilder.append("Guid=").append(gUid).append("&");
-        stringBuilder.append("RechargeMoney=").append(rechargeMoney);
+        stringBuilder.append("RechargeDiamond=").append(rechargeDiamond);
         stringBuilder.append("&RechargeGold=0");
         stringBuilder.append(key);
         String data =  MD5Util.md5(stringBuilder.toString()).toLowerCase();
