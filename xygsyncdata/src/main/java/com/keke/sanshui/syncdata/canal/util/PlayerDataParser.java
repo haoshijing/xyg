@@ -8,7 +8,6 @@ import com.keke.sanshui.base.admin.po.PlayerPo;
 import com.keke.sanshui.base.admin.po.PlayerRelationPo;
 import com.keke.sanshui.base.admin.po.agent.AgentPo;
 import com.keke.sanshui.base.admin.service.AgentService;
-import com.keke.sanshui.syncdata.canal.protocol.S2DB;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import lombok.Data;
@@ -28,7 +27,7 @@ import java.util.concurrent.TimeUnit;
 
 @Repository
 @Slf4j
-public  class PlayerDataParser {
+public class PlayerDataParser {
     @Autowired
     private HttpClient httpClient;
 
@@ -42,7 +41,7 @@ public  class PlayerDataParser {
     }
 
     @Data
-    public static class PlayerAndAgentData{
+    public static class PlayerAndAgentData {
         private List<PlayerRelationPo> playerRelationPos;
         private List<AgentPo> agentPos;
     }
@@ -52,9 +51,9 @@ public  class PlayerDataParser {
         byte[] sourceData = (byte[]) data.get("base_data");
         byte[] deEncryptByteData = deEncrypt(sourceData);
         PlayerInfo playerInfo = getPlayerInfo(playerId.intValue(), deEncryptByteData);
-        Timestamp createTime = (Timestamp)data.get("create_time");
-        String otherName = (String)data.get("other_name");
-        otherName= removeNonBmpUnicode(otherName);
+        Timestamp createTime = (Timestamp) data.get("create_time");
+        String otherName = (String) data.get("other_name");
+        otherName = removeNonBmpUnicode(otherName);
         PlayerPo playerPo = playerInfo.getPlayerPo();
         playerPo.setOtherName(otherName);
         playerPo.setGameInsertTime(createTime.getTime());
@@ -62,7 +61,7 @@ public  class PlayerDataParser {
     }
 
     public PlayerAndAgentData parseFromWorldData(byte[] sourceData) {
-        S2DB.Characters characters = S2DB.Characters.parseFrom(sourceData);
+        byte[] deEncryptByteData = deEncrypt(sourceData);
         PlayerAndAgentData data = getPlayRelations(deEncryptByteData);
         return data;
     }
@@ -70,7 +69,7 @@ public  class PlayerDataParser {
     private PlayerAndAgentData getPlayRelations(byte[] deEncryptByteData) {
         List<PlayerRelationPo> relationPos = Lists.newArrayList();
         List<AgentPo> agentPos = Lists.newArrayList();
-        Map<Integer,Set<PlayerRelationPo>> relationMaps = Maps.newHashMap();
+        Map<Integer, Set<PlayerRelationPo>> relationMaps = Maps.newHashMap();
         ByteBuf byteBuf = Unpooled.buffer(deEncryptByteData.length);
         byteBuf.writeBytes(deEncryptByteData);
         byte curVersion = byteBuf.readByte();
@@ -98,41 +97,29 @@ public  class PlayerDataParser {
                     //log.info("childrenId = {}",childrenId);
                 }
                 boolean isAgent = byteBuf.readBoolean();
-                if(curPlayerVersion >= 2){
+                if (curPlayerVersion >= 2) {
                     byte chooseType = byteBuf.readByte();
                 }
                 boolean needAddRelation = false;
-                if(!isAgent){
-                    needAddRelation = true;
-                }else{
-                    if(invitedGuid.intValue() == 0 ||
-                            parentIsNormalAgent(guid.intValue(),invitedGuid.intValue())){
-                        needAddRelation = true;
-                    }
+
+                PlayerRelationPo playerRelationPo = new PlayerRelationPo();
+                playerRelationPo.setParentPlayerId(invitedGuid.intValue());
+                playerRelationPo.setLastUpdateTime(System.currentTimeMillis());
+                playerRelationPo.setPlayerId(guid.intValue());
+                Set<PlayerRelationPo> playerRelationPos = relationMaps.get(guid.intValue());
+                if (playerRelationPos == null) {
+                    playerRelationPos = Sets.newHashSet();
+                    relationMaps.put(guid.intValue(), playerRelationPos);
                 }
-                if(needAddRelation) {
-                    PlayerRelationPo playerRelationPo = new PlayerRelationPo();
-                    playerRelationPo.setParentPlayerId(invitedGuid.intValue());
-                    playerRelationPo.setLastUpdateTime(System.currentTimeMillis());
-                    playerRelationPo.setPlayerId(guid.intValue());
-                    Set<PlayerRelationPo> playerRelationPos = relationMaps.get(guid.intValue());
-                    if (playerRelationPos == null) {
-                        playerRelationPos = Sets.newHashSet();
-                        relationMaps.put(guid.intValue(), playerRelationPos);
-                    }
-                    playerRelationPos.add(playerRelationPo);
-                }
-                if(isAgent){
+                playerRelationPos.add(playerRelationPo);
+
+                if (isAgent) {
                     AgentPo agentPo = new AgentPo();
                     agentPo.setInsertTime(System.currentTimeMillis());
                     agentPo.setLastUpdateTime(System.currentTimeMillis());
                     agentPo.setStatus(2);
                     agentPo.setLevel(3);
-                    if(parentIsNormalAgent(guid.intValue(),invitedGuid.intValue())) {
-                        agentPo.setIsNeedAreaCal(2);
-                    }else{
-                        agentPo.setIsNeedAreaCal(1);
-                    }
+
                     agentPo.setAgentWeChartNo(name);
                     agentPo.setAgentNickName(otherName);
                     agentPo.setMemo("");
@@ -145,7 +132,7 @@ public  class PlayerDataParser {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        relationMaps.forEach((inviteId,relationPoSet)->{
+        relationMaps.forEach((inviteId, relationPoSet) -> {
             relationPos.addAll(relationPoSet);
         });
         playerAndAgentData.setAgentPos(agentPos);
@@ -153,13 +140,14 @@ public  class PlayerDataParser {
         return playerAndAgentData;
     }
 
-    private boolean parentIsNormalAgent(Integer guid,Integer parentGuid){
-        if(parentGuid.equals(0)){
-            return  false;
+    private boolean parentIsNormalAgent(Integer guid, Integer parentGuid) {
+        if (parentGuid.equals(0)) {
+            return false;
         }
         AgentPo agentPo = agentService.findByGuid(parentGuid.intValue());
         return agentPo != null && agentPo.getLevel() == 3 && agentPo.getStatus() == 1;
     }
+
     private PlayerInfo getPlayerInfo(Integer playerId, byte[] data) {
 
         ByteBuf byteBuf = Unpooled.buffer(data.length);
@@ -196,7 +184,7 @@ public  class PlayerDataParser {
         }
         endIdx = byteBuf.readerIndex();
 
-        String str = new String(byteBuf.array(), startIdx, endIdx - 1-startIdx);
+        String str = new String(byteBuf.array(), startIdx, endIdx - 1 - startIdx);
         return str;
     }
 
@@ -213,6 +201,7 @@ public  class PlayerDataParser {
         }
         return responseData;
     }
+
     public static String removeNonBmpUnicode(String str) {
         if (str == null) {
             return null;

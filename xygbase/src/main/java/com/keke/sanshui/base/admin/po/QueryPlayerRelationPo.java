@@ -6,4 +6,7 @@ import lombok.Data;
 public class QueryPlayerRelationPo extends PlayerRelationPo {
     private Integer offset;
     private Integer limit;
+
+    private Long start;
+    private Long end;
 }
