@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keke.sanshui.base.admin.dao.OrderDAO">
+    <sql id="all_columns">
+        *
+    </sql>
+    <sql id="tableName">
+        t_order
+    </sql>
+    <select id="getByOrderId" resultType="Order" parameterType="java.lang.String">
+        <!-- 具体的sql -->
+        SELECT
+        <include refid="all_columns"/>
+        FROM
+        <include refid="tableName"/>
+        WHERE selfOrderNo = #{selfOrderNo}
+    </select>
+
+    <sql id = "selectListCondition">
+        <where>
+            <if test="param.orderStatus != null">
+                AND orderStatus = #{param.orderStatus}
+            </if>
+            <if test="param.clientGuids != null and param.clientGuids.size() > 0">
+                AND clientGuid in
+                <foreach collection="param.clientGuids" close=")" open="(" item="guid" separator=",">
+                    #{guid}
+                </foreach>
+            </if>
+            <if test="param.selfOrderNo != null and param.selfOrderNo != ''">
+                AND selfOrderNo = #{param.selfOrderNo}
+            </if>
+
+            <if test="param.startTimestamp != null and param.endTimestamp != null">
+                AND lastUpdateTime BETWEEN #{param.startTimestamp} AND #{param.endTimestamp}
+            </if>
+        </where>
+    </sql>
+
+    <insert id="insert" parameterType="Order">
+        INSERT INTO t_order(
+          id,
+          selfOrderNo,
+          clientGuid ,
+          title,
+          money,
+          price,
+          insertTime,
+          orderStatus,
+         sendStatus,
+         lastUpdateTime)
+         select
+          #{order.id},
+          #{order.selfOrderNo},
+           #{order.clientGuid} ,
+          #{order.title} ,
+          #{order.money },
+          #{order.price},
+          #{order.insertTime},
+         #{order.orderStatus},
+         #{order.sendStatus},
+         #{order.lastUpdateTime}
+    </insert>
+
+    <select id="queryNotSendList" resultType="Order">
+        select * from t_order where orderStatus = 3 and sendStatus = 1 order by id asc
+    </select>
+
+    <update id="updateByOrderId" parameterType="Order">
+        update t_order
+        <set>
+            <if test="order.sendStatus != null ">
+                sendStatus = #{order.sendStatus},
+            </if>
+            <if test="order.orderStatus != null ">
+                orderStatus = #{order.orderStatus},
+            </if>
+            <if test="order.payType != null">
+                payType = #{order.payType},
+            </if>
+            <if test="order.payTime != null">
+                payTime = #{order.payTime},
+            </if>
+            <if test="order.payState != null">
+                payState = #{order.payState},
+            </if>
+            <if test="order.sendTime != null">
+                sendTime = #{order.sendTime}
+            </if>
+            <if test="order.orderNo != null">
+                orderNo = #{order.orderNo},
+            </if>
+            <if test="order.lastUpdateTime != null">
+                lastUpdateTime = #{order.lastUpdateTime},
+            </if>
+        </set>
+        where selfOrderNo = #{order.selfOrderNo}
+    </update>
+
+    <select id="queryPickupSum" resultType="java.lang.Long">
+        select sum(price) from t_order
+        where clientGuid = #{guid} and orderStatus = 2
+        and lastUpdateTime BETWEEN #{startTimestamp} AND #{endTimestamp}
+    </select>
+
+    <select id="selectList" parameterType="QueryOrderPo" resultType="Order">
+        select * from t_order
+        <include refid="selectListCondition"></include>
+        order by id desc
+        limit #{param.offset} , #{param.limit}
+    </select>
+
+    <select id = "queryCount" parameterType="QueryOrderPo" resultType="java.lang.Long">
+        select count(1) from t_order
+        <include refid="selectListCondition"></include>
+
+    </select>
+</mapper>
