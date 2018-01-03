@@ -8,6 +8,7 @@ import com.keke.sanshui.base.admin.po.PlayerPo;
 import com.keke.sanshui.base.admin.po.PlayerRelationPo;
 import com.keke.sanshui.base.admin.po.agent.AgentPo;
 import com.keke.sanshui.base.admin.service.AgentService;
+import com.keke.sanshui.syncdata.canal.protocol.S2DB;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import lombok.Data;
@@ -61,7 +62,7 @@ public  class PlayerDataParser {
     }
 
     public PlayerAndAgentData parseFromWorldData(byte[] sourceData) {
-        byte[] deEncryptByteData = deEncrypt(sourceData);
+        S2DB.Characters characters = S2DB.Characters.parseFrom(sourceData);
         PlayerAndAgentData data = getPlayRelations(deEncryptByteData);
         return data;
     }
