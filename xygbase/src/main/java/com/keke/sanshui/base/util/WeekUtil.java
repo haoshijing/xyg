@@ -18,44 +18,28 @@ public final class WeekUtil {
 
 
     public static int getCurrentWeek(String dateStr){
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.YEAR,2017);
-        calendar.set(Calendar.MONTH,Calendar.OCTOBER);
-        calendar.set(Calendar.DATE,23);
-        calendar.set(Calendar.HOUR_OF_DAY,0);
-        calendar.set(Calendar.MINUTE,0);
-        calendar.set(Calendar.SECOND,0);
-        long startTimestamp = calendar.getTimeInMillis();
-        long endTimestamp = Calendar.getInstance().getTimeInMillis();
+        Long firstTimeStamp = 1515340800000L;
+        long endTimestamp = System.currentTimeMillis();
         if(StringUtils.isNotEmpty(dateStr)){
             try {
                 Date date = format.parse(dateStr);
-                Long diffWeek = (date.getTime() - startTimestamp) / WEEK_MILL;
+                Long diffWeek = (date.getTime() - firstTimeStamp) / WEEK_MILL;
                 return  diffWeek.intValue() + 1;
             }catch (Exception e){
                 return 0;
             }
         }else{
-            Long diffWeek =  (endTimestamp - startTimestamp) /WEEK_MILL;
+            Long diffWeek =  (endTimestamp - firstTimeStamp) /WEEK_MILL;
             return diffWeek.intValue() + 1;
         }
-
     }
 
     public static long getWeekStartTimestamp(int week){
-//        Calendar cal = Calendar.getInstance();
-//        cal.set(2017,Calendar.OCTOBER,23,0,0,0);
-//        cal.set(Calendar.WEEK_OF_YEAR,cal.get(Calendar.WEEK_OF_YEAR)+(week-1));
-//        return cal.getTimeInMillis();
-        DateTime dateTime = new DateTime(2017,10,29,0,0,0);
+        DateTime dateTime = new DateTime(2018,1,8,0,0,0);
         return dateTime.plusWeeks(week-1).getMillis();
     }
     public static long getWeekEndTimestamp(int week){
-//        Calendar cal = Calendar.getInstance();
-//        cal.set(2017,Calendar.OCTOBER,29,23,59,59);
-//        cal.set(Calendar.WEEK_OF_YEAR,cal.get(Calendar.WEEK_OF_YEAR)+(week-1));
-//        return cal.getTimeInMillis();
-        DateTime dateTime = new DateTime(2017,10,29,23,59,59);
+        DateTime dateTime = new DateTime(2017,1,14,23,59,59);
         return dateTime.plusWeeks(week-1).getMillis();
     }
     public static long getWeekStartTimestamp(){
