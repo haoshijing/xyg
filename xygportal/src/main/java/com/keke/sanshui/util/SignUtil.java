@@ -159,7 +159,6 @@ public class SignUtil {
         stringBuilder.append("OrderId=").append(orderId).append("&");
         stringBuilder.append("Guid=").append(gUid).append("&");
         stringBuilder.append("RechargeDiamond=").append(rechargeDiamond);
-        stringBuilder.append("&RechargeGold=0");
         stringBuilder.append(key);
         String data =  MD5Util.md5(stringBuilder.toString()).toLowerCase();
         return data;
