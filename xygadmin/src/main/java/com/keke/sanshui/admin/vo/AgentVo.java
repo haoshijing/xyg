@@ -29,6 +29,16 @@ public class AgentVo {
     private Long agentTotalPickUp;
 
     /**
+     * 当前周新增人数
+     */
+    private Integer addCount;
+
+    /*
+    本周是否领取过奖励
+     */
+    private Integer isAward;
+
+    /**
      * 地区代理直接玩家充值额
      */
     private Long areaAgentUnderTotalPickUp;

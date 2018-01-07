@@ -12,11 +12,9 @@ import com.keke.sanshui.admin.response.agent.UnderAgentVo;
 import com.keke.sanshui.admin.response.agent.UnderPlayerVo;
 import com.keke.sanshui.admin.util.CSVUtils;
 import com.keke.sanshui.admin.vo.AgentVo;
-import com.keke.sanshui.base.admin.dao.AgentPickTotalDAO;
-import com.keke.sanshui.base.admin.dao.PlayerDAO;
-import com.keke.sanshui.base.admin.dao.PlayerPickTotalDAO;
-import com.keke.sanshui.base.admin.dao.PlayerRelationDAO;
+import com.keke.sanshui.base.admin.dao.*;
 import com.keke.sanshui.base.admin.po.*;
+import com.keke.sanshui.base.admin.po.agent.AgentExtPo;
 import com.keke.sanshui.base.admin.po.agent.AgentPo;
 import com.keke.sanshui.base.admin.po.agent.AgentQueryPo;
 import com.keke.sanshui.base.admin.service.AgentService;
@@ -67,10 +65,14 @@ public class AdminAgentReadService {
     PlayerDAO playerDAO;
 
     @Autowired
+    AgentExtDAO agentExtDAO;
+
+    @Autowired
     AdminAuthCacheService adminAuthCacheService;
 
 
     public List<AgentVo> selectAgentVoList(AgentQueryVo agentQueryVo) {
+        Integer week = agentQueryVo.getWeek();
         AgentQueryPo queryAgentPo = new AgentQueryPo();
         queryAgentPo.setPlayerId(agentQueryVo.getGuid());
         queryAgentPo.setLimit(agentQueryVo.getLimit());
@@ -85,7 +87,6 @@ public class AdminAgentReadService {
         }
         queryAgentPo.setOffset((page - 1) * agentQueryVo.getLimit());
         List<AgentPo> agentPos = agentService.selectList(queryAgentPo);
-        Integer week = agentQueryVo.getWeek();
         List<AgentVo> agentVos = agentPos.stream().map(eachAgentPo -> {
             AgentVo agentVo = new AgentVo();
             agentVo.setGameId(eachAgentPo.getPlayerId());
@@ -136,6 +137,17 @@ public class AdminAgentReadService {
                 underAgentCount = String.valueOf(agentService.selectCount(tmpQueryVo));
             }
             agentVo.setUnderAgentCount(underAgentCount);
+            return agentVo;
+        }).map(agentVo -> {
+            Integer agentId = agentVo.getAgentId();
+            AgentExtPo agentExtPo = agentExtDAO.selectByAgentId(agentId, week);
+            if(agentExtPo != null){
+                agentVo.setIsAward(agentExtPo.getIsAward());
+                agentVo.setAddCount(agentExtPo.getAddCount());
+            }else{
+                agentVo.setIsAward(2);
+                agentVo.setAddCount(0);
+            }
             return agentVo;
         }).collect(Collectors.toList());
         return agentVos;
