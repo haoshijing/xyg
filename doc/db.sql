@@ -73,6 +73,7 @@ agentId int comment '代理id',
 week varchar(100) comment '所在周',
 isAward int comment '本周是否有发放奖励',
 addCount int comment '本周下级增长数',
+status int comment '本周奖励发放状态',
 insertTime bigint comment '写入时间',
 lastUpdateTime bigint comment '最后修改时间'
  ) comment '代理额外信息表';

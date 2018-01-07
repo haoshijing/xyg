@@ -12,6 +12,7 @@ public class AgentExtPo {
     private Integer agentId;
     private Integer playerId;
     private Integer week;
+    private Integer status;
     private Integer isAward;
     private Integer addCount;
     private Long lastUpdateTime;

@@ -26,16 +26,18 @@
     </select>
 
 
-    <update id="update" parameterType="AgentExtPo">
+    <update id="updateAgentExtPo" parameterType="AgentExtPo">
         UPDATE   <include refid="tableName"/>
         <set>
-            <if test="param.agentName != null and param.agentName != ''">
-                agentName = #{param.agentName},
+            <if test="param.status != null and param.status != ''">
+                status = #{param.status},
             </if>
-            <if test="param.isNeedAreaCal != null ">
-                isNeedAreaCal = #{param.isNeedAreaCal},
+            <if test="param.addCount != null ">
+                addCount = #{param.addCount},
             </if>
-
+            <if test="param.lastUpdateTime != null ">
+                lastUpdateTime = #{param.lastUpdateTime},
+            </if>
         </set>
         <where>
             <if test="param.playerId != null">
@@ -47,39 +49,30 @@
             <if test="param.agentId != null">
                 agentId = #{param.agentId}
             </if>
+            and week = #{param.week}
         </where>
     </update>
-    <insert id="insert" parameterType="AgentPo" useGeneratedKeys="true" keyProperty="agent.id">
+    <insert id="insertAgentExtPo" parameterType="AgentExtPo" useGeneratedKeys="true" keyProperty="agentExt.id">
         Insert into t_agent_ext
         (
-        id,
         agentId,
-        agentName,
-        password,
-        agentWeChartNo,
-        agentNickName,
-        level,
-        parentId,
+        playerId,
+        week,
+        isAward,
+        addCount,
         status,
-        memo,
         insertTime,
-        lastUpdateTime,
-        isNeedAreaCal
+        lastUpdateTime
         )
         select
-         #{agent.id},
-        #{agent.playerId},
-        #{agent.agentName},
-        #{agent.password},
-        #{agent.agentWeChartNo},
-        #{agent.agentNickName},
-        #{agent.level},
-        #{agent.parentId},
-        #{agent.status},
-        #{agent.memo},
-        #{agent.insertTime},
-        #{agent.lastUpdateTime},
-        #{agent.isNeedAreaCal}
+         #{agentExt.agentId},
+         #{agentExt.playerId},
+         #{agentExt.week},
+        #{agentExt.isAward},
+        #{agentExt.addCount},
+       #{agentExt.status},
+        #{agentExt.insertTime},
+        #{agentExt.lastUpdateTime}
 
     </insert>
 

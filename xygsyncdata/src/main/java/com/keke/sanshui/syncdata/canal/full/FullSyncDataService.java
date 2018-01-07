@@ -67,7 +67,7 @@ public class FullSyncDataService {
         DruidDataSource druidDataSource = new DruidDataSource();
         druidDataSource.setUsername(syncDbName);
         druidDataSource.setPassword(syncDbPassword);
-        druidDataSource.setUrl("jdbc:mysql://" + syncDbIp + ":3306/waterthirteen?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull");
+        druidDataSource.setUrl("jdbc:mysql://" + syncDbIp + ":3306/xianyugouqipai?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull");
         jdbcTemplate.setDataSource(druidDataSource);
     }
 
@@ -84,7 +84,7 @@ public class FullSyncDataService {
                     log.error("", e);
                 }
             }
-        }, 10000, 60000, TimeUnit.MILLISECONDS);
+        }, 10000, 6000, TimeUnit.MILLISECONDS);
     }
 
     public void syncRelation() {
