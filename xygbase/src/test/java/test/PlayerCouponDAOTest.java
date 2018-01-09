@@ -27,7 +27,7 @@ public class PlayerCouponDAOTest {
         playerCouponPo.setGoldCount(3);
         playerCouponPo.setPlayerId(1011);
         playerCouponPo.setLastUpdateTime(System.currentTimeMillis());
-        playerCouponPo.setSilverCount(0);
+        playerCouponPo.setDiamondCount(0);
         Assert.assertTrue(playerCouponDAO.insertPlayerCouponPo(playerCouponPo) > 0);
     }
 
@@ -37,7 +37,7 @@ public class PlayerCouponDAOTest {
         playerCouponPo.setGoldCount(33);
         playerCouponPo.setPlayerId(1011);
         playerCouponPo.setLastUpdateTime(System.currentTimeMillis());
-        playerCouponPo.setSilverCount(2);
+        playerCouponPo.setDiamondCount(2);
         Assert.assertTrue(playerCouponDAO.updatePlayerCouponPo(playerCouponPo) > 0);
     }
 }

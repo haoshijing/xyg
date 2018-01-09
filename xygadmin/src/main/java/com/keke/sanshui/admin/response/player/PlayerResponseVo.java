@@ -8,7 +8,7 @@ public class PlayerResponseVo {
     private String otherName;
     private Long pickTotal;
     private Integer goldCount;
-    private Integer sliverCount;
+    private Integer  diamondCount;
     private Integer agentGuidId;
     private Long insertTime;
     private String week;

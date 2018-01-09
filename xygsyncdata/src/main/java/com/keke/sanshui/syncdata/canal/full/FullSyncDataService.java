@@ -149,7 +149,8 @@ public class FullSyncDataService {
                     } else {
                         PlayerCouponPo updatePlayerCouponPo = new PlayerCouponPo();
                         updatePlayerCouponPo.setPlayerId(playerInfo.getPlayerCouponPo().getPlayerId());
-                        updatePlayerCouponPo.setSilverCount(playerInfo.getPlayerCouponPo().getSilverCount());
+                        updatePlayerCouponPo.setDiamondCount(playerInfo.getPlayerCouponPo().getDiamondCount());
+                        updatePlayerCouponPo.setGoldCount(playerInfo.getPlayerCouponPo().getGoldCount());
                         playerService.updatePlayerCoupon(updatePlayerCouponPo);
                     }
                 }

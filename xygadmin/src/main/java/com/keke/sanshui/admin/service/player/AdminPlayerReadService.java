@@ -48,7 +48,7 @@ public class AdminPlayerReadService {
             PlayerResponseVo playerResponseVo = new PlayerResponseVo();
             PlayerCouponPo playerCouponPo = playerCouponDAO.selectByPlayerId(playerPo.getPlayerId());
             if (playerCouponPo != null) {
-                playerResponseVo.setSliverCount(playerCouponPo.getSilverCount());
+                playerResponseVo.setDiamondCount(playerCouponPo.getDiamondCount());
                 playerResponseVo.setGoldCount(playerCouponPo.getGoldCount());
             }
             playerResponseVo.setGuid(playerPo.getPlayerId());
@@ -82,7 +82,7 @@ public class AdminPlayerReadService {
             PlayerResponseVo playerResponseVo = new PlayerResponseVo();
             PlayerCouponPo playerCouponPo = playerCouponDAO.selectByPlayerId(playerRelationPo.getPlayerId());
             if (playerCouponPo != null) {
-                playerResponseVo.setSliverCount(playerCouponPo.getSilverCount());
+                playerResponseVo.setDiamondCount(playerCouponPo.getDiamondCount());
                 playerResponseVo.setGoldCount(playerCouponPo.getGoldCount());
             }
             PlayerPo playerPo = playerDAO.selectByPlayId(playerRelationPo.getPlayerId());

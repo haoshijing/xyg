@@ -104,10 +104,10 @@ public class AdminAgentReadService {
             PlayerCouponPo playerCouponPo = playerCouponService.selectByPlayerId(agentVo.getGameId());
             if (playerCouponPo != null) {
                 agentVo.setGoldCount(playerCouponPo.getGoldCount());
-                agentVo.setSliverCount(playerCouponPo.getSilverCount());
+                agentVo.setDiamondCount(playerCouponPo.getDiamondCount());
             } else {
                 agentVo.setGoldCount(0);
-                agentVo.setSliverCount(0);
+                agentVo.setDiamondCount(0);
             }
             return agentVo;
         }).map(agentVo -> {

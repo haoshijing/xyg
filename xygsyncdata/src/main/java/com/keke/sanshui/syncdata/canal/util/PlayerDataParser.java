@@ -146,24 +146,16 @@ public class PlayerDataParser {
         return playerAndAgentData;
     }
 
-    private boolean parentIsNormalAgent(Integer guid, Integer parentGuid) {
-        if (parentGuid.equals(0)) {
-            return false;
-        }
-        AgentPo agentPo = agentService.findByGuid(parentGuid.intValue());
-        return agentPo != null && agentPo.getLevel() == 3 && agentPo.getStatus() == 1;
-    }
-
     private PlayerInfo getPlayerInfo(Integer playerId, Character.BaseData baseData) {
 
         int curVersion = baseData.getCurVersion();
         String name = baseData.getName();
 
         Long goldCount = baseData.getGold();
-        Long money = baseData.getCard();
+        Long diamond = baseData.getDiamond();
 
         PlayerCouponPo playerCouponPo = new PlayerCouponPo();
-        playerCouponPo.setSilverCount(money.intValue());
+        playerCouponPo.setDiamondCount(diamond.intValue());
         playerCouponPo.setGoldCount(goldCount.intValue());
         playerCouponPo.setPlayerId(playerId);
         playerCouponPo.setLastUpdateTime(System.currentTimeMillis());
@@ -172,7 +164,7 @@ public class PlayerDataParser {
         playerPo.setPlayerId(playerId);
         playerPo.setStatus(1);
         playerPo.setName(name);
-
+        playerPo.setCardCount(baseData.getCard());
         playerPo.setInsertTime(System.currentTimeMillis());
         playerPo.setLastUpdateTime(System.currentTimeMillis());
 

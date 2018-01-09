@@ -10,7 +10,7 @@ public class AgentVo {
     private String weChartNo;
     private String nickName;
     private Integer goldCount;
-    private Integer sliverCount;
+    private Integer diamondCount;
     private Integer type;
     private String memo;
     private String week;
