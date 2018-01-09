@@ -22,7 +22,8 @@
         id,
         playerId,
         goldCount,
-        silverCount,
+        diamondCount,
+        cardCount,
         lastUpdateTime
         )
 
@@ -30,7 +31,8 @@
         #{param.id},
         #{param.playerId},
         #{param.goldCount},
-        #{param.silverCount},
+        #{param.diamondCount},
+        #{param.cardCount},
         #{param.lastUpdateTime}
 
     </insert>
@@ -41,8 +43,11 @@
             <if test = "param.goldCount != null">
                 goldCount = #{param.goldCount},
             </if>
-            <if test = "param.silverCount != null">
-                silverCount = #{param.silverCount},
+            <if test = "param.cardCount != null">
+                cardCount = #{param.cardCount},
+            </if>
+            <if test = "param.diamondCount != null">
+                diamondCount = #{param.diamondCount},
             </if>
             <if test = "param.lastUpdateTime != null">
                 lastUpdateTime = #{param.lastUpdateTime},

@@ -53,7 +53,7 @@ public class PlayerDataParser {
         PlayerInfo playerInfo = null;
         try {
             Character.BaseData baseData = Character.BaseData.parseFrom(sourceData);
-            getPlayerInfo(playerId.intValue(), baseData);
+            playerInfo = getPlayerInfo(playerId.intValue(), baseData);
             Timestamp createTime = (Timestamp) data.get("create_time");
             String otherName = (String) data.get("other_name");
             otherName = removeNonBmpUnicode(otherName);
@@ -61,7 +61,7 @@ public class PlayerDataParser {
             playerPo.setOtherName(otherName);
             playerPo.setGameInsertTime(createTime.getTime());
         }catch (Exception e){
-
+            log.error("{}",e);
         }
         return playerInfo;
     }
@@ -153,10 +153,11 @@ public class PlayerDataParser {
 
         Long goldCount = baseData.getGold();
         Long diamond = baseData.getDiamond();
-
+        Long cardCount = baseData.getCard();
         PlayerCouponPo playerCouponPo = new PlayerCouponPo();
         playerCouponPo.setDiamondCount(diamond.intValue());
         playerCouponPo.setGoldCount(goldCount.intValue());
+        playerCouponPo.setCardCount(cardCount.intValue());
         playerCouponPo.setPlayerId(playerId);
         playerCouponPo.setLastUpdateTime(System.currentTimeMillis());
 
@@ -164,7 +165,6 @@ public class PlayerDataParser {
         playerPo.setPlayerId(playerId);
         playerPo.setStatus(1);
         playerPo.setName(name);
-        playerPo.setCardCount(baseData.getCard());
         playerPo.setInsertTime(System.currentTimeMillis());
         playerPo.setLastUpdateTime(System.currentTimeMillis());
 

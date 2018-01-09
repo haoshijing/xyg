@@ -50,6 +50,7 @@ public class AdminPlayerReadService {
             if (playerCouponPo != null) {
                 playerResponseVo.setDiamondCount(playerCouponPo.getDiamondCount());
                 playerResponseVo.setGoldCount(playerCouponPo.getGoldCount());
+                playerCouponPo.setCardCount(playerCouponPo.getGoldCount());
             }
             playerResponseVo.setGuid(playerPo.getPlayerId());
             playerResponseVo.setInsertTime(playerPo.getGameInsertTime());
@@ -82,6 +83,7 @@ public class AdminPlayerReadService {
             PlayerResponseVo playerResponseVo = new PlayerResponseVo();
             PlayerCouponPo playerCouponPo = playerCouponDAO.selectByPlayerId(playerRelationPo.getPlayerId());
             if (playerCouponPo != null) {
+                playerResponseVo.setCardCount(playerCouponPo.getCardCount());
                 playerResponseVo.setDiamondCount(playerCouponPo.getDiamondCount());
                 playerResponseVo.setGoldCount(playerCouponPo.getGoldCount());
             }

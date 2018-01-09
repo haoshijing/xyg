@@ -9,6 +9,7 @@ public class PlayerResponseVo {
     private Long pickTotal;
     private Integer goldCount;
     private Integer  diamondCount;
+    private Integer cardCount;
     private Integer agentGuidId;
     private Long insertTime;
     private String week;

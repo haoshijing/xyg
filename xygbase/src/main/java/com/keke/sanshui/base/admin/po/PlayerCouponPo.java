@@ -8,5 +8,6 @@ public class PlayerCouponPo {
     private Integer playerId;
     private Integer goldCount;
     private Integer diamondCount;
+    private Integer cardCount;
     private Long lastUpdateTime;
 }

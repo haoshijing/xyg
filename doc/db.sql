@@ -83,7 +83,8 @@ create table t_player_coupon(
 id int primary key auto_increment comment '主键id',
 playerId int comment '游戏id',
 goldCount int comment '金豆数量',
- silverCount int comment '银豆数量',
+ diamondCount int comment '钻石数量',
+ cardCount int comment '卡片数量',
  lastUpdateTime bigint comment '最后同步时间'
 ) comment '豆值剩余表,该表数据通过cannal进行同步';
 

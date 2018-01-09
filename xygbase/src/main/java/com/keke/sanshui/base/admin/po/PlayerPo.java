@@ -11,7 +11,6 @@ public class PlayerPo {
     private Long  lastUpdateTime;
     private Integer status;
     private String name;
-    private Long cardCount;
     private String otherName;
     /**
      * 游戏服务器创建时间
