@@ -8,6 +8,7 @@ import com.keke.sanshui.base.admin.po.PlayerPo;
 import com.keke.sanshui.base.admin.po.PlayerRelationPo;
 import com.keke.sanshui.base.admin.po.agent.AgentPo;
 import com.keke.sanshui.base.admin.service.AgentService;
+import com.keke.sanshui.syncdata.canal.protocol.Character;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import lombok.Data;
@@ -49,14 +50,19 @@ public class PlayerDataParser {
     public PlayerInfo parseFromBaseData(Map<String, Object> data) {
         Integer playerId = (Integer) data.get("guid");
         byte[] sourceData = (byte[]) data.get("base_data");
-        byte[] deEncryptByteData = deEncrypt(sourceData);
-        PlayerInfo playerInfo = getPlayerInfo(playerId.intValue(), deEncryptByteData);
-        Timestamp createTime = (Timestamp) data.get("create_time");
-        String otherName = (String) data.get("other_name");
-        otherName = removeNonBmpUnicode(otherName);
-        PlayerPo playerPo = playerInfo.getPlayerPo();
-        playerPo.setOtherName(otherName);
-        playerPo.setGameInsertTime(createTime.getTime());
+        PlayerInfo playerInfo = null;
+        try {
+            Character.BaseData baseData = Character.BaseData.parseFrom(sourceData);
+            getPlayerInfo(playerId.intValue(), baseData);
+            Timestamp createTime = (Timestamp) data.get("create_time");
+            String otherName = (String) data.get("other_name");
+            otherName = removeNonBmpUnicode(otherName);
+            PlayerPo playerPo = playerInfo.getPlayerPo();
+            playerPo.setOtherName(otherName);
+            playerPo.setGameInsertTime(createTime.getTime());
+        }catch (Exception e){
+
+        }
         return playerInfo;
     }
 
@@ -148,15 +154,13 @@ public class PlayerDataParser {
         return agentPo != null && agentPo.getLevel() == 3 && agentPo.getStatus() == 1;
     }
 
-    private PlayerInfo getPlayerInfo(Integer playerId, byte[] data) {
+    private PlayerInfo getPlayerInfo(Integer playerId, Character.BaseData baseData) {
 
-        ByteBuf byteBuf = Unpooled.buffer(data.length);
-        byteBuf.writeBytes(data);
-        byte curVersion = byteBuf.readByte();
-        String name = readString(byteBuf);
+        int curVersion = baseData.getCurVersion();
+        String name = baseData.getName();
 
-        Long goldCount = byteBuf.readLongLE();
-        Long money = byteBuf.readLongLE();
+        Long goldCount = baseData.getGold();
+        Long money = baseData.getCard();
 
         PlayerCouponPo playerCouponPo = new PlayerCouponPo();
         playerCouponPo.setSilverCount(money.intValue());
