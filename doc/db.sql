@@ -26,7 +26,18 @@ create table t_order(
   lastUpdateTime bigint comment '发送给服务器成功的时间',
    unique (selfOrderNo)
 );
-
+drop TABLE IF EXISTS t_cash;
+create table t_admin
+(
+  id int primary key auto_increment comment '主键id',
+  playerId varchar(200) comment 'guid',
+  agentId varchar(200) comment 'agentId',
+  money varchar(200) comment '提款金额',
+  status int comment '打款状态',
+  gameServerStatus int comment '游戏服务器状态',
+  lastUpdateTime bigint comment '最后修改时间',
+  insertTime bigint comment '创建时间'
+) comment '管理员表';
 
 drop TABLE IF EXISTS t_admin;
 create table t_admin
