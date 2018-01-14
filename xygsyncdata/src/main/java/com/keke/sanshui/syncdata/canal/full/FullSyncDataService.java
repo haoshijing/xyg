@@ -84,7 +84,7 @@ public class FullSyncDataService {
                     log.error("", e);
                 }
             }
-        }, 10000, 6000, TimeUnit.MILLISECONDS);
+        }, 10, 60, TimeUnit.SECONDS);
     }
 
     public void syncRelation() {
@@ -97,11 +97,11 @@ public class FullSyncDataService {
             playerAndAgentData.getPlayerRelationPos().forEach(playerRelationPo -> {
                 Integer parentId = playerRelationPo.getParentPlayerId().intValue();
                 Integer playerId = playerRelationPo.getPlayerId().intValue();
-                PlayerRelationPo playerRelationPo1 = playerRelationDAO.selectByPlayerId(playerId);
-                if (playerRelationPo1 != null) {
+                PlayerRelationPo queryPlayRelation = playerRelationDAO.selectByPlayerId(playerId);
+                if (queryPlayRelation != null) {
                     PlayerRelationPo updatePlayerRelationPo = new PlayerRelationPo();
                     updatePlayerRelationPo.setPlayerId(playerId);
-                    updatePlayerRelationPo.setId(playerRelationPo1.getId());
+                    updatePlayerRelationPo.setId(queryPlayRelation.getId());
                     updatePlayerRelationPo.setParentPlayerId(parentId);
                     playerRelationDAO.updatePlayerRelation(updatePlayerRelationPo);
                 } else {
@@ -118,11 +118,6 @@ public class FullSyncDataService {
                     } catch (Exception e) {
                         log.error("{}", e);
                     }
-                } else {
-                    AgentPo updatePo = new AgentPo();
-                    updatePo.setId(queryPo.getId());
-                    updatePo.setIsNeedAreaCal(agentPo.getIsNeedAreaCal());
-                    agentDAO.updateAgent(updatePo);
                 }
             });
         });
