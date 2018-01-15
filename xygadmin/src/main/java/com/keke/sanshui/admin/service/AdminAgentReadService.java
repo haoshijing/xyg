@@ -120,10 +120,8 @@ public class AdminAgentReadService {
                     AgentPickTotalPo agentPickTotalPo = agentPickTotalDAO.selectByAgentId(agentVo.getAgentId(), week);
                     if (agentPickTotalPo != null) {
                         agentVo.setAgentUnderTotalPickUp(agentPickTotalPo.getTotalMoney());
-                        agentVo.setAreaAgentUnderTotalPickUp(agentPickTotalPo.getTotalUnderMoney());
                     } else {
                         agentVo.setAgentUnderTotalPickUp(0L);
-                        agentVo.setAreaAgentUnderTotalPickUp(0L);
                     }
                     return agentVo;
                 }
@@ -136,7 +134,6 @@ public class AdminAgentReadService {
                 tmpQueryVo.setParentId(agentVo.getAgentId());
                 underAgentCount = String.valueOf(agentService.selectCount(tmpQueryVo));
             }
-            agentVo.setUnderAgentCount(underAgentCount);
             return agentVo;
         }).map(agentVo -> {
             Integer agentId = agentVo.getAgentId();

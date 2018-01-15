@@ -11,6 +11,7 @@ public class AgentVo {
     private String nickName;
     private Integer goldCount;
     private Integer diamondCount;
+    private Integer cardCount;
     private Integer type;
     private String memo;
     private String week;
@@ -38,10 +39,5 @@ public class AgentVo {
      */
     private Integer isAward;
 
-    /**
-     * 地区代理直接玩家充值额
-     */
-    private Long areaAgentUnderTotalPickUp;
 
-    private String underAgentCount;
 }
