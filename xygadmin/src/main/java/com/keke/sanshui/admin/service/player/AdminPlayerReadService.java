@@ -50,7 +50,7 @@ public class AdminPlayerReadService {
             if (playerCouponPo != null) {
                 playerResponseVo.setDiamondCount(playerCouponPo.getDiamondCount());
                 playerResponseVo.setGoldCount(playerCouponPo.getGoldCount());
-                playerCouponPo.setCardCount(playerCouponPo.getGoldCount());
+                playerResponseVo.setCardCount(playerCouponPo.getCardCount());
             }
             playerResponseVo.setGuid(playerPo.getPlayerId());
             playerResponseVo.setInsertTime(playerPo.getGameInsertTime());
