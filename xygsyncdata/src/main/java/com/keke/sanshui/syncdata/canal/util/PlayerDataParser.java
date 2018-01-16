@@ -102,8 +102,8 @@ public class PlayerDataParser {
                     //log.info("childrenId = {}",childrenId);
                 }
                 boolean isAgent = byteBuf.readBoolean();
-                if (curPlayerVersion >= 2) {
-                    byte chooseType = byteBuf.readByte();
+                if (curPlayerVersion >= 5) {
+                    int level = byteBuf.readIntLE();
                 }
                 boolean needAddRelation = false;
 
