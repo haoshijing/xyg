@@ -103,9 +103,11 @@ public class AdminAgentReadService {
         }).map(agentVo -> {
             PlayerCouponPo playerCouponPo = playerCouponService.selectByPlayerId(agentVo.getGameId());
             if (playerCouponPo != null) {
+                agentVo.setCardCount(playerCouponPo.getCardCount());
                 agentVo.setGoldCount(playerCouponPo.getGoldCount());
                 agentVo.setDiamondCount(playerCouponPo.getDiamondCount());
             } else {
+                agentVo.setCardCount(0);
                 agentVo.setGoldCount(0);
                 agentVo.setDiamondCount(0);
             }
@@ -132,7 +134,6 @@ public class AdminAgentReadService {
             if (agentVo.getType() == 2) {
                 AgentQueryPo tmpQueryVo = new AgentQueryPo();
                 tmpQueryVo.setParentId(agentVo.getAgentId());
-                underAgentCount = String.valueOf(agentService.selectCount(tmpQueryVo));
             }
             return agentVo;
         }).map(agentVo -> {
