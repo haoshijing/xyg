@@ -105,8 +105,6 @@ public class PlayerDataParser {
                 if (curPlayerVersion >= 5) {
                     int level = byteBuf.readIntLE();
                 }
-                boolean needAddRelation = false;
-
                 PlayerRelationPo playerRelationPo = new PlayerRelationPo();
                 playerRelationPo.setParentPlayerId(invitedGuid.intValue());
                 playerRelationPo.setLastUpdateTime(System.currentTimeMillis());

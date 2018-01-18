@@ -8,4 +8,5 @@ import java.util.List;
 public class AgentPlayerResponseVo {
     private List<PlayerResponseVo> playerResponseVoList;
     private Long underMoney;
+    private Integer addCount;
 }

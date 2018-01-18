@@ -65,7 +65,9 @@ public class PlayerController extends AbstractController {
             AgentPlayerResponseVo agentPlayerResponseVo = new AgentPlayerResponseVo();
             agentPlayerResponseVo.setPlayerResponseVoList(list);
             long underMoney = adminAgentReadService.getWeekMoney(playerId,playerQueryVo.getWeek());
+            Integer addCount = adminAgentReadService.getWeekAddCount(playerId,playerQueryVo.getWeek());
             agentPlayerResponseVo.setUnderMoney(underMoney);
+            agentPlayerResponseVo.setAddCount(addCount);
             return new ApiResponse<>(agentPlayerResponseVo);
         }catch (Exception e){
             log.error("agentList error {}", JSON.toJSONString(playerQueryVo),e);

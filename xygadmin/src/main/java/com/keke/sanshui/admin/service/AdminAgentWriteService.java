@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 public class AdminAgentWriteService {
     @Autowired
     AgentService agentService;
-    private final static String PROXY_PWD = "13shui";
+    private final static String PROXY_PWD = "xianyugou";
 
     @Value("${saltEncrypt}")
     private String saltEncrypt;
@@ -41,9 +41,7 @@ public class AdminAgentWriteService {
             updateAgentPo.setPlayerId(agentRequestVo.getGuid());
             updateAgentPo.setMemo(agentRequestVo.getMemo());
             updateAgentPo.setStatus(1);
-            if(updateAgentPo.getLevel() == 2) {
-                updateAgentPo.setParentId(null);
-            }
+
             boolean checkIsValidName = checkIsValidUserName(agentRequestVo.getUserName());
             if(!checkIsValidName){
                 return Pair.of(false,"该用户名已存在");
@@ -52,10 +50,7 @@ public class AdminAgentWriteService {
             if(!checkGuid){
                 return Pair.of(false,"无效的guid,可能为已设置代理或者改guid无资格成为代理");
             }
-            boolean checkParentAgentId = checkParentAgentId(agentRequestVo.getParentAgentId(),agentRequestVo.getLevel());
-            if(!checkParentAgentId){
-                return Pair.of(false,"无效的上级代理id");
-            }
+
             int updateRet = agentService.updateAgent(updateAgentPo);
             return Pair.of(true,"");
         }else{

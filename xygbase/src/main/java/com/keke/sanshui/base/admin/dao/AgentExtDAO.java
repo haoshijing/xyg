@@ -15,4 +15,6 @@ public interface AgentExtDAO {
 
     int updateAgentExtPo(@Param("param")AgentExtPo updateExtPo);
 
+    AgentExtPo selectByPlayerId(@Param("playerId")Integer playerId,@Param("week") Integer week);
+
 }

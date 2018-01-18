@@ -405,4 +405,9 @@ public class AdminAgentReadService {
         }
         return 0L;
     }
+
+    public Integer getWeekAddCount(Integer playerId, Integer week) {
+        AgentExtPo agentExtPo =   agentExtDAO.selectByAgentId(playerId,week);
+        return  agentExtPo != null ? agentExtPo.getAddCount() : 0;
+    }
 }
