@@ -11,6 +11,7 @@ import com.keke.sanshui.admin.response.agent.AgentExportVo;
 import com.keke.sanshui.admin.response.agent.UnderAgentVo;
 import com.keke.sanshui.admin.response.agent.UnderPlayerVo;
 import com.keke.sanshui.admin.util.CSVUtils;
+import com.keke.sanshui.admin.vo.AgentMyInfo;
 import com.keke.sanshui.admin.vo.AgentVo;
 import com.keke.sanshui.base.admin.dao.*;
 import com.keke.sanshui.base.admin.po.*;
@@ -404,6 +405,26 @@ public class AdminAgentReadService {
             }
         }
         return 0L;
+    }
+
+    public AgentMyInfo queryMyInfo(Integer areaAgentGuid) {
+        AgentMyInfo agentMyInfo = new AgentMyInfo();
+        PlayerCouponPo couponPo = playerCouponService.selectByPlayerId(areaAgentGuid);
+        agentMyInfo.setCardCount(couponPo.getCardCount());
+        agentMyInfo.setDiamondCount(couponPo.getDiamondCount());
+        agentMyInfo.setGoldCount(couponPo.getGoldCount());
+        Integer week = WeekUtil.getCurrentWeek();
+
+        AgentPo agentPo = agentService.findByGuid(areaAgentGuid);
+        if(agentPo != null) {
+            AgentExtPo agentExtPo = agentExtDAO.selectByAgentId(agentPo.getId(),week);
+            if(agentExtPo != null && agentExtPo.getAddCount()!= null){
+                agentMyInfo.setAddCount(agentExtPo.getAddCount());
+            }else{
+                agentMyInfo.setAddCount(0);
+            }
+        }
+        return agentMyInfo;
     }
 
     public Integer getWeekAddCount(Integer playerId, Integer week) {

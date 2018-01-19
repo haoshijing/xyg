@@ -6,6 +6,7 @@ import com.keke.sanshui.admin.request.player.PlayerQueryVo;
 import com.keke.sanshui.admin.response.ApiResponse;
 import com.keke.sanshui.admin.response.RetCode;
 import com.keke.sanshui.admin.service.AdminAgentReadService;
+import com.keke.sanshui.admin.vo.AgentMyInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -42,6 +43,18 @@ public class AgentController extends AbstractController{
         }catch (Exception e){
             log.error("",e);
             return new ApiResponse<>(RetCode.SERVER_ERROR,e.getMessage(),0L);
+        }
+    }
+
+    @RequestMapping("/queryMy")
+    public ApiResponse<AgentMyInfo> queryMy(HttpServletRequest request){
+        try{
+            Integer areaAgentGuid = Integer.parseInt(getToken(request).getUserName());
+            AgentMyInfo agentMyInfo  = adminAgentReadService.queryMyInfo(areaAgentGuid);
+            return new ApiResponse<>(agentMyInfo);
+        }catch (Exception e){
+            log.error("",e);
+            return new ApiResponse<>(RetCode.SERVER_ERROR,e.getMessage(),new AgentMyInfo());
         }
     }
 }
