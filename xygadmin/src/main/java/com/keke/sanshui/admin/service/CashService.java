@@ -9,6 +9,7 @@ import com.keke.sanshui.base.admin.po.agent.AgentPo;
 import com.keke.sanshui.base.admin.po.agent.CashPo;
 import com.keke.sanshui.base.admin.po.agent.CashQueryPo;
 import com.keke.sanshui.base.admin.service.AgentService;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -59,9 +60,12 @@ public class CashService {
         cashPo.setInsertTime(System.currentTimeMillis());
         cashPo.setLastUpdateTime(System.currentTimeMillis());
         cashDAO.insertCash(cashPo);
-        if(cashPo.getId() > 0) {
-            response.setMessage("提现成功");
-            response.setSucc(true);
+        Pair<Boolean,Boolean> pair =  gateWayService.sendToGameServer(cashPo.getPlayerId(),cashPo.getGoldCount().toString());
+        if(pair.getLeft()) {
+            if (cashPo.getId() > 0) {
+                response.setMessage("提现成功");
+                response.setSucc(true);
+            }
         }else{
             response.setMessage("提现失败,服务器错误,请联系管理员查看");
         }
@@ -69,12 +73,6 @@ public class CashService {
     }
 
     public Boolean dealCash(Integer id, Integer status) {
-        if(status == 2){
-            CashPo cashPo = cashDAO.findById(id);
-            if(cashPo != null){
-                gateWayService.sendToGameServer(cashPo.getPlayerId(),cashPo.getGoldCount().toString());
-            }
-        }
         CashPo cashPo = new CashPo();
         cashPo.setStatus(status);
         cashPo.setId(id);
