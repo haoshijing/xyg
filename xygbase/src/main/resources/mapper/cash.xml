@@ -21,6 +21,9 @@
         <if test = "param.agentId != null and param.agentId > 0">
             AND  agentId  = #{param.agentId}
         </if>
+        <if test = "param.playerId != null and param.playerId > 0">
+            AND  playerId  = #{param.playerId}
+        </if>
         <if test = "param.status != null">
             AND status = #{param.status}
         </if>

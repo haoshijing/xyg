@@ -16,7 +16,7 @@
             </if>
         </where>
     </sql>
-    <select id="selectList" parameterType="QueryAgentReward">
+    <select id="selectList" parameterType="QueryAgentReward" resultType="AgentReward">
         select * from t_proxy_reward_record
         <include refid="selectListCondition"></include>
         order by id desc

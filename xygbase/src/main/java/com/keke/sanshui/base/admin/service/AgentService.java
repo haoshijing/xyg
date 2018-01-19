@@ -53,7 +53,7 @@ public class AgentService implements ApplicationContextAware {
                StringBuilder mark = new StringBuilder("管理员").append("把")
                        .append("[玩家").
                                append(agentPo.getPlayerId()).
-                               append("] 设置成[").append(AgentLevelEnums.getByType(agentPo.getLevel()).getMark())
+                               append("")
                        .append("]");
                operLogPo.setMark(mark.toString());
                operLogPo.setOperType(1);

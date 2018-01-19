@@ -9,6 +9,7 @@ import com.keke.sanshui.admin.response.RetCode;
 import com.keke.sanshui.admin.service.AdminAgentReadService;
 import com.keke.sanshui.admin.vo.AgentMyInfo;
 import com.keke.sanshui.admin.vo.AgentOrderVo;
+import com.keke.sanshui.admin.vo.AgentRewardVo;
 import com.keke.sanshui.base.admin.po.agent.AgentReward;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @Slf4j
@@ -75,11 +78,17 @@ public class AgentController extends AbstractController{
     }
 
     @RequestMapping("/queryRewardList")
-    public ApiResponse<List<AgentReward>> queryRewardList(HttpServletRequest request){
+    public ApiResponse<List<AgentRewardVo>> queryRewardList(HttpServletRequest request){
         try{
             Integer areaAgentGuid = Integer.parseInt(getToken(request).getUserName());
             List<AgentReward> agentRewards  = adminAgentReadService.queryRewardList(areaAgentGuid);
-            return new ApiResponse<>(agentRewards);
+            List<AgentRewardVo> agentRewardVos =  agentRewards.stream().map(agentReward -> {
+                AgentRewardVo  rewardVo = new AgentRewardVo();
+                rewardVo.setReward(agentReward.getReward());
+                rewardVo.setRewardTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(agentReward.getCreateTime()));
+                return rewardVo;
+            }).collect(Collectors.toList());
+            return new ApiResponse<>(agentRewardVos);
         }catch (Exception e){
             log.error("",e);
             return new ApiResponse<>(RetCode.SERVER_ERROR,e.getMessage(), Lists.newArrayList());
