@@ -57,6 +57,7 @@ public class CashService {
         cashPo.setStatus(1);
         cashPo.setAgentId(agentPo.getId());
         cashPo.setGoldCount(gold);
+        cashPo.setPlayerId(guid);
         cashPo.setInsertTime(System.currentTimeMillis());
         cashPo.setLastUpdateTime(System.currentTimeMillis());
         cashDAO.insertCash(cashPo);
