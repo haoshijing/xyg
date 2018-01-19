@@ -32,7 +32,8 @@ create table t_proxy_reward_record
   id int primary key auto_increment comment '主键id',
   guid int comment 'guid',
   reward int comment '奖励数',
-) comment '管理员表';
+  createTime bigint comment '奖励时间'
+) comment '奖励表';
 drop TABLE IF EXISTS t_cash;
 create table t_admin
 (

@@ -4,12 +4,14 @@ import com.keke.sanshui.admin.AbstractController;
 import com.keke.sanshui.admin.auth.AdminAuthInfo;
 import com.keke.sanshui.admin.response.ApiResponse;
 import com.keke.sanshui.admin.service.CashService;
+import com.keke.sanshui.admin.vo.cash.CashVo;
 import com.keke.sanshui.admin.vo.cash.SubmitCashResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @RestController
 @RequestMapping("/cash")
@@ -25,6 +27,16 @@ public class CashController extends AbstractController {
         SubmitCashResponse response = cashService.submitCash(gold, guid);
         return new ApiResponse<>(response);
     }
+
+    @RequestMapping("/queryList")
+    public ApiResponse<List<CashVo>> queryList(HttpServletRequest request) {
+        AdminAuthInfo adminAuthInfo = getToken(request);
+        Integer guid = Integer.valueOf(adminAuthInfo.getUserName());
+        List<CashVo> cashVoList = cashService.queryList(guid);
+        return new ApiResponse<>(cashVoList);
+    }
+
+
 
     @RequestMapping("/dealCash")
     public ApiResponse<Boolean> dealCash(Integer id, Integer status) {

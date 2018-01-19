@@ -1,5 +1,6 @@
 package com.keke.sanshui.admin.service;
 
+import com.keke.sanshui.admin.vo.cash.CashVo;
 import com.keke.sanshui.admin.vo.cash.SubmitCashResponse;
 import com.keke.sanshui.base.admin.dao.CashDAO;
 import com.keke.sanshui.base.admin.dao.PlayerCouponDAO;
@@ -10,6 +11,10 @@ import com.keke.sanshui.base.admin.po.agent.CashQueryPo;
 import com.keke.sanshui.base.admin.service.AgentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import java.text.SimpleDateFormat;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 public class CashService {
@@ -76,5 +81,29 @@ public class CashService {
         cashPo.setLastUpdateTime(System.currentTimeMillis());
         cashDAO.updatePo(cashPo);
         return true;
+    }
+
+    public List<CashVo> queryList(Integer guid) {
+        CashQueryPo cashQueryPo = new CashQueryPo();
+        cashQueryPo.setPlayerId(guid);
+        cashQueryPo.setLimit(50);
+        cashQueryPo.setOffset(0);
+        List<CashPo> cashPos = cashDAO.selectList(cashQueryPo);
+        List<CashVo> cashVos =  cashPos.stream().map( cashPo -> {
+            CashVo cashVo = new CashVo();
+            cashVo.setId(cashPo.getId());
+            cashVo.setCashTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(cashPo.getInsertTime()));
+            cashVo.setGoldCount(cashPo.getGoldCount());
+            if(cashPo.getStatus() == 1) {
+                cashVo.setStatus("未处理");
+            }else if(cashPo.getStatus() == 2){
+                cashVo.setStatus("已通过");
+            }else{
+                cashVo.setStatus("已拒绝");
+            }
+            return cashVo;
+        }).collect(Collectors.toList());
+        return cashVos;
+
     }
 }

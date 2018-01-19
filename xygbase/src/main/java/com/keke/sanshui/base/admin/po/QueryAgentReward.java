@@ -5,6 +5,6 @@ import lombok.Data;
 
 @Data
 public class QueryAgentReward extends AgentReward {
-    private Integer offset;
-    private Integer limit;
+    private Integer offset = 0;
+    private Integer limit = 50;
 }

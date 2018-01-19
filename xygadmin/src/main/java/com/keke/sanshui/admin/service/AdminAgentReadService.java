@@ -1,43 +1,46 @@
 package com.keke.sanshui.admin.service;
 
 
-import com.google.common.collect.Lists;
-import com.keke.sanshui.admin.agent.response.UnderAgentResponseVo;
-import com.keke.sanshui.admin.agent.response.UnderProxyVo;
-import com.keke.sanshui.admin.auth.AdminAuthCacheService;
-import com.keke.sanshui.admin.request.agent.AgentQueryVo;
-import com.keke.sanshui.admin.request.player.PlayerQueryVo;
-import com.keke.sanshui.admin.response.agent.AgentExportVo;
-import com.keke.sanshui.admin.response.agent.UnderAgentVo;
-import com.keke.sanshui.admin.response.agent.UnderPlayerVo;
-import com.keke.sanshui.admin.util.CSVUtils;
-import com.keke.sanshui.admin.vo.AgentMyInfo;
-import com.keke.sanshui.admin.vo.AgentVo;
-import com.keke.sanshui.base.admin.dao.*;
-import com.keke.sanshui.base.admin.po.*;
-import com.keke.sanshui.base.admin.po.agent.*;
-import com.keke.sanshui.base.admin.service.AgentService;
-import com.keke.sanshui.base.admin.service.PlayerCouponService;
-import com.keke.sanshui.base.util.MD5Util;
-import com.keke.sanshui.base.util.WeekUtil;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.tuple.Pair;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Repository;
-import org.springframework.util.CollectionUtils;
+        import com.google.common.collect.Lists;
+        import com.keke.sanshui.admin.agent.response.UnderAgentResponseVo;
+        import com.keke.sanshui.admin.agent.response.UnderProxyVo;
+        import com.keke.sanshui.admin.auth.AdminAuthCacheService;
+        import com.keke.sanshui.admin.request.agent.AgentQueryVo;
+        import com.keke.sanshui.admin.request.player.PlayerQueryVo;
+        import com.keke.sanshui.admin.response.agent.AgentExportVo;
+        import com.keke.sanshui.admin.response.agent.UnderAgentVo;
+        import com.keke.sanshui.admin.response.agent.UnderPlayerVo;
+        import com.keke.sanshui.admin.util.CSVUtils;
+        import com.keke.sanshui.admin.vo.AgentMyInfo;
+        import com.keke.sanshui.admin.vo.AgentOrderVo;
+        import com.keke.sanshui.admin.vo.AgentVo;
+        import com.keke.sanshui.base.admin.dao.*;
+        import com.keke.sanshui.base.admin.po.*;
+        import com.keke.sanshui.base.admin.po.agent.*;
+        import com.keke.sanshui.base.admin.po.order.Order;
+        import com.keke.sanshui.base.admin.po.order.QueryOrderPo;
+        import com.keke.sanshui.base.admin.service.AgentService;
+        import com.keke.sanshui.base.admin.service.PlayerCouponService;
+        import com.keke.sanshui.base.util.MD5Util;
+        import com.keke.sanshui.base.util.WeekUtil;
+        import lombok.extern.slf4j.Slf4j;
+        import org.apache.commons.lang3.StringUtils;
+        import org.apache.commons.lang3.tuple.Pair;
+        import org.springframework.beans.factory.annotation.Autowired;
+        import org.springframework.beans.factory.annotation.Value;
+        import org.springframework.stereotype.Repository;
+        import org.springframework.util.CollectionUtils;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.OutputStream;
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
+        import javax.servlet.http.HttpServletResponse;
+        import java.io.File;
+        import java.io.FileInputStream;
+        import java.io.OutputStream;
+        import java.text.SimpleDateFormat;
+        import java.util.Arrays;
+        import java.util.Date;
+        import java.util.List;
+        import java.util.UUID;
+        import java.util.stream.Collectors;
 
 @Repository
 @Slf4j
@@ -71,8 +74,12 @@ public class AdminAgentReadService {
     CashDAO cashDAO;
 
     @Autowired
+    OrderDAO orderDAO;
+    @Autowired
     AdminAuthCacheService adminAuthCacheService;
 
+    @Autowired
+    AgentRewardDAO agentRewardDAO;
 
     public List<AgentVo> selectAgentVoList(AgentQueryVo agentQueryVo) {
         Integer week = agentQueryVo.getWeek();
@@ -439,6 +446,8 @@ public class AdminAgentReadService {
             }else{
                 agentMyInfo.setAddCount(0);
             }
+        }else{
+            agentMyInfo.setAddCount(0);
         }
         return agentMyInfo;
     }
@@ -446,5 +455,37 @@ public class AdminAgentReadService {
     public Integer getWeekAddCount(Integer playerId, Integer week) {
         AgentExtPo agentExtPo =   agentExtDAO.selectByAgentId(playerId,week);
         return  agentExtPo != null ? agentExtPo.getAddCount() : 0;
+    }
+
+    public List<AgentOrderVo> queryMyOrderList(Integer areaAgentGuid, Long maxId) {
+
+        QueryOrderPo queryOrderPo = new QueryOrderPo();
+        queryOrderPo.setLimit(50);
+        queryOrderPo.setOffset(0);
+        queryOrderPo.setClientGuids(Lists.newArrayList(areaAgentGuid));
+
+        List<Order> orders  = orderDAO.selectList(queryOrderPo);
+        return orders.stream().map(order -> {
+            AgentOrderVo agentOrderVo = new AgentOrderVo();
+            agentOrderVo.setMoney(order.getPrice());
+            agentOrderVo.setId(order.getId());
+            agentOrderVo.setOrderId(order.getSelfOrderNo());
+            agentOrderVo.setTitle(order.getMoney()+"房卡");
+            agentOrderVo.setOrderTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(order.getInsertTime()));
+            if(order.getOrderStatus() == 2) {
+                agentOrderVo.setPayStatus("支付成功");
+            }else if(order.getOrderStatus() == 1){
+                agentOrderVo.setPayStatus("未支付");
+            }else{
+                agentOrderVo.setPayStatus("支付失败");
+            }
+            return agentOrderVo;
+        }).collect(Collectors.toList());
+    }
+
+    public List<AgentReward> queryRewardList(Integer areaAgentGuid) {
+        QueryAgentReward queryAgentReward = new QueryAgentReward();
+        queryAgentReward.setGuid(areaAgentGuid);
+        return agentRewardDAO.selectList(queryAgentReward);
     }
 }

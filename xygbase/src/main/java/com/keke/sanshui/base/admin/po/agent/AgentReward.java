@@ -7,4 +7,5 @@ public class AgentReward {
     private Integer id;
     private Integer guid;
     private Integer reward;
+    private Long createTime;
 }

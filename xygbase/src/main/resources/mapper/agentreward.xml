@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keke.sanshui.base.admin.dao.AgentRewardDAO">
+    <sql id="all_columns">
+        *
+    </sql>
+    <sql id="tableName">
+        t_proxy_reward_record
+    </sql>
+
+    <sql id = "selectListCondition">
+        <where>
+            <if test="param.guid != null">
+                AND guid = #{param.guid}
+            </if>
+        </where>
+    </sql>
+    <select id="selectList" parameterType="QueryAgentReward">
+        select * from t_proxy_reward_record
+        <include refid="selectListCondition"></include>
+        order by id desc
+        limit #{param.offset} , #{param.limit}
+    </select>
+
+
+    <insert id="insert" parameterType="AgentReward" useGeneratedKeys="true" keyProperty="id">
+        Insert into t_proxy_reward_record
+        (
+        guid,
+        reward,
+        createTime
+        )
+        select
+         #{guid},
+         #{reward},
+         #{createTime}
+
+    </insert>
+
+    <delete id="deleteData">
+        delete from t_proxy_reward_record
+    </delete>
+
+</mapper>

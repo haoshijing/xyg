@@ -2,10 +2,12 @@ package com.keke.sanshui.syncdata.canal.full;
 
 import com.alibaba.druid.pool.DruidDataSource;
 import com.keke.sanshui.base.admin.dao.AgentDAO;
+import com.keke.sanshui.base.admin.dao.AgentRewardDAO;
 import com.keke.sanshui.base.admin.dao.PlayerRelationDAO;
 import com.keke.sanshui.base.admin.po.PlayerCouponPo;
 import com.keke.sanshui.base.admin.po.PlayerRelationPo;
 import com.keke.sanshui.base.admin.po.agent.AgentPo;
+import com.keke.sanshui.base.admin.po.agent.AgentReward;
 import com.keke.sanshui.base.admin.service.PlayerService;
 import com.keke.sanshui.syncdata.canal.util.PlayerDataParser;
 import io.netty.util.concurrent.DefaultThreadFactory;
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
 import java.math.BigInteger;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
@@ -44,8 +47,12 @@ public class FullSyncDataService {
     @Autowired
     private AgentDAO agentDAO;
 
+    @Autowired
+    AgentRewardDAO agentRewardDAO;
 
     private ScheduledExecutorService scheduledExecutorService;
+
+    private ScheduledExecutorService executorService;
 
     @Value("${sync.db.ip}")
     private String syncDbIp;
@@ -84,8 +91,41 @@ public class FullSyncDataService {
                     log.error("", e);
                 }
             }
-        }, 10, 60, TimeUnit.SECONDS);
+        }, 10, 30, TimeUnit.SECONDS);
+
+        executorService  = Executors.newScheduledThreadPool(1, new DefaultThreadFactory("SyncDataThread1"));
+        executorService.scheduleWithFixedDelay(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    syncReward();
+                } catch (Exception e) {
+                    log.error("", e);
+                }
+            }
+        }, 2, 3600*24, TimeUnit.SECONDS);
+
     }
+
+    private void syncReward() {
+        log.info("");
+        String sql = " select guid,reward,finishTime from daili_reward_record ";
+        List<Map<String, Object>> datas = jdbcTemplate.queryForList(sql);
+        agentRewardDAO.deleteData();
+        datas.forEach(data -> {
+            AgentReward reward = new AgentReward();
+            Long guid = (Long)data.get("guid");
+            Integer rewardData = (Integer)data.get("reward");
+            Timestamp timestamp = (Timestamp)data.get("finishTime");
+
+            reward.setCreateTime(timestamp.getTime());
+            reward.setGuid(guid.intValue());
+            reward.setReward(rewardData);
+
+            agentRewardDAO.insert(reward);
+        });
+    }
+
 
     public void syncRelation() {
         log.info("关系开始进行同步");
