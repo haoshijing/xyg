@@ -8,7 +8,6 @@
     <modules>
         <module>xygadmin</module>
         <module>xygbase</module>
-        <module>xygportal</module>
         <module>xygjob</module>
         <module>xygsyncdata</module>
     </modules>
