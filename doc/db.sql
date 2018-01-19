@@ -45,6 +45,19 @@ create table t_admin
   lastUpdateTime bigint comment '最后修改时间',
   insertTime bigint comment '创建时间'
 ) comment '管理员表';
+drop TABLE IF EXISTS t_cash;
+create table t_cash
+(
+id int primary key auto_increment comment '主键id',
+agentId int  comment '代理id',
+playerId int  comment '代理guid',
+goldCount int comment  '提现金币数',
+insertTime bigint comment '写入时间',
+lastUpdateTime bigint comment '最后修改时间',
+message varchar(50) comment '审核说明',
+status int comment '审核状态,1-未审核 2通过 3-不通过'
+) comment '提现表';
+
 
 drop TABLE IF EXISTS t_admin;
 create table t_admin

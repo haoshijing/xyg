@@ -13,6 +13,9 @@ public class AgentExtPo {
     private Integer playerId;
     private Integer week;
     private Integer status;
+    /**
+     * 0-初始化,1-已领取
+     */
     private Integer isAward;
     private Integer addCount;
     private Long lastUpdateTime;

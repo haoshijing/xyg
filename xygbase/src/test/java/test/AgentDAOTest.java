@@ -1,8 +1,10 @@
 package test;
 
 import com.keke.sanshui.base.admin.dao.AgentDAO;
+import com.keke.sanshui.base.admin.dao.CashDAO;
 import com.keke.sanshui.base.admin.po.agent.AgentPo;
 import com.keke.sanshui.base.admin.po.agent.AgentQueryPo;
+import com.keke.sanshui.base.admin.po.agent.CashPo;
 import com.keke.sanshui.base.admin.service.AgentService;
 import org.junit.Assert;
 import org.junit.Test;
@@ -21,11 +23,27 @@ public class AgentDAOTest {
     private AgentDAO agentDAO;
 
     @Autowired
+    CashDAO cashDAO;
+
+    @Autowired
     private AgentService agentService;
 
     @Test
     public void testSelectPlayer(){
 
+    }
+
+    @Test
+    public void testInsertCash(){
+        CashPo cashPo = new CashPo();
+        cashPo.setLastUpdateTime(System.currentTimeMillis());
+        cashPo.setStatus(1);
+        cashPo.setAgentId(8);
+        cashPo.setPlayerId(1000566);
+        cashPo.setGoldCount(100);
+        cashPo.setInsertTime(System.currentTimeMillis());
+        cashDAO.insertCash(cashPo);
+        Assert.assertTrue(cashPo.getId() > 0);
     }
 
     @Test

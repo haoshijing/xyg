@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keke.sanshui.base.admin.dao.CashDAO">
+    <sql id="all_columns">
+        *
+    </sql>
+    <sql id = "tableName">
+        t_cash
+    </sql>
+
+    <select id = "findById" resultType="CashPo">
+        SELECT <include refid="all_columns"/> FROM
+        <include refid="tableName"/>
+        where id = #{id}
+    </select>
+
+
+    <sql id="queryWhere">
+
+        <if test = "param.agentId != null and param.agentId > 0">
+            AND  agentId  = #{param.agentId}
+        </if>
+        <if test = "param.status != null">
+            AND status = #{param.status}
+        </if>
+
+    </sql>
+    <select id="selectList" parameterType="CashQueryPo" resultType="CashPo">
+        <!-- 具体的sql -->
+        SELECT <include refid="all_columns"/> FROM
+        <include refid="tableName"/>
+        <where>
+            <include refid="queryWhere"></include>
+        </where>
+        order by id desc
+        limit #{param.offset},#{param.limit}
+    </select>
+
+    <select id="selectCount" parameterType="CashQueryPo" resultType="java.lang.Long">
+        <!-- 具体的sql -->
+        SELECT count(1) FROM
+        <include refid="tableName"/>
+        <where>
+            <include refid="queryWhere"></include>
+        </where>
+    </select>
+
+    <update id = "updatePo" parameterType="CashPo">
+        UPDATE  t_cash
+        <set>
+            <if test = "param.message != null">
+                message = #{param.message},
+            </if>
+            <if test = "param.status != null">
+                status = #{param.status},
+            </if>
+            <if test = "param.lastUpdateTime != null">
+                lastUpdateTime = #{param.lastUpdateTime},
+            </if>
+        </set>
+        <where>
+            <if test = "param.id != null">
+                id  = #{param.id}
+            </if>
+        </where>
+    </update>
+    <insert id="insertCash" parameterType="CashPo" useGeneratedKeys="true" keyProperty="id">
+        Insert into t_cash
+        (
+        id,
+        agentId,
+        playerId,
+        goldCount,
+        status,
+        message,
+        insertTime,
+        lastUpdateTime
+        )
+        select
+        #{id},
+        #{agentId},
+        #{playerId},
+        #{goldCount},
+        #{status},
+        #{message},
+        #{insertTime},
+        #{lastUpdateTime}
+
+    </insert>
+
+
+
+</mapper>

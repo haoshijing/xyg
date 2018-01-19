@@ -1,5 +1,6 @@
 package com.keke.sanshui.admin.vo;
 
+import com.keke.sanshui.base.admin.po.agent.CashPo;
 import lombok.Data;
 
 @Data
@@ -37,6 +38,6 @@ public class AgentVo {
     /*
     本周是否领取过奖励
      */
-    private Integer isAward;
-
+    private String isAward;
+    CashPo cashPo;
 }

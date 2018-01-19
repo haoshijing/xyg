@@ -15,9 +15,7 @@ import com.keke.sanshui.admin.vo.AgentMyInfo;
 import com.keke.sanshui.admin.vo.AgentVo;
 import com.keke.sanshui.base.admin.dao.*;
 import com.keke.sanshui.base.admin.po.*;
-import com.keke.sanshui.base.admin.po.agent.AgentExtPo;
-import com.keke.sanshui.base.admin.po.agent.AgentPo;
-import com.keke.sanshui.base.admin.po.agent.AgentQueryPo;
+import com.keke.sanshui.base.admin.po.agent.*;
 import com.keke.sanshui.base.admin.service.AgentService;
 import com.keke.sanshui.base.admin.service.PlayerCouponService;
 import com.keke.sanshui.base.util.MD5Util;
@@ -28,6 +26,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.CollectionUtils;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
@@ -67,6 +66,9 @@ public class AdminAgentReadService {
 
     @Autowired
     AgentExtDAO agentExtDAO;
+
+    @Autowired
+    CashDAO cashDAO;
 
     @Autowired
     AdminAuthCacheService adminAuthCacheService;
@@ -141,11 +143,25 @@ public class AdminAgentReadService {
             Integer agentId = agentVo.getAgentId();
             AgentExtPo agentExtPo = agentExtDAO.selectByAgentId(agentId, week);
             if(agentExtPo != null){
-                agentVo.setIsAward(agentExtPo.getIsAward());
+                Integer isAward = agentExtPo.getIsAward();
+                if(isAward == 1){
+                    agentVo.setIsAward("已领取");
+                }else{
+                    agentVo.setIsAward("未领取");
+                }
                 agentVo.setAddCount(agentExtPo.getAddCount());
             }else{
-                agentVo.setIsAward(2);
+                agentVo.setIsAward("未领取");
                 agentVo.setAddCount(0);
+            }
+            return agentVo;
+        }).map(agentVo -> {
+            CashQueryPo cashQueryPo = new CashQueryPo();
+            cashQueryPo.setStatus(1);
+            cashQueryPo.setAgentId(agentVo.getAgentId());
+            List<CashPo> cashPos = cashDAO.selectList(cashQueryPo);
+            if(!CollectionUtils.isEmpty(cashPos)){
+                agentVo.setCashPo(cashPos.get(0));
             }
             return agentVo;
         }).collect(Collectors.toList());
