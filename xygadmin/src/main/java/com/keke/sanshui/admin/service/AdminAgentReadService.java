@@ -444,6 +444,7 @@ public class AdminAgentReadService {
         AgentPo agentPo = agentService.findByGuid(areaAgentGuid);
         agentMyInfo.setLevel(agentPo.getLevel());
         if(agentPo != null) {
+            agentMyInfo.setGuid(areaAgentGuid);
             agentMyInfo.setAlipayAccout(agentPo.getAlipayAccout());
             agentMyInfo.setWechartAccout(agentPo.getWechartAccout());
             AgentExtPo agentExtPo = agentExtDAO.selectByAgentId(agentPo.getId(),week);

@@ -102,8 +102,10 @@ public class PlayerDataParser {
                     //log.info("childrenId = {}",childrenId);
                 }
                 boolean isAgent = byteBuf.readBoolean();
+                int level = 0;
                 if (curPlayerVersion >= 5) {
-                    int level = byteBuf.readIntLE();
+                    level = byteBuf.readIntLE();
+
                 }
                 PlayerRelationPo playerRelationPo = new PlayerRelationPo();
                 playerRelationPo.setParentPlayerId(invitedGuid.intValue());
@@ -122,7 +124,7 @@ public class PlayerDataParser {
                     agentPo.setLastUpdateTime(System.currentTimeMillis());
                     agentPo.setStatus(2);
                     agentPo.setLevel(3);
-
+                    agentPo.setLevel(level);
                     agentPo.setAgentWeChartNo(name);
                     agentPo.setAgentNickName(otherName);
                     agentPo.setMemo("");

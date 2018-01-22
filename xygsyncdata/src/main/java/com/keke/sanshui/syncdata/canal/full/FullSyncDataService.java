@@ -158,6 +158,11 @@ public class FullSyncDataService {
                     } catch (Exception e) {
                         log.error("{}", e);
                     }
+                }else{
+                    AgentPo updatePo = new AgentPo();
+                    updatePo.setId(queryPo.getId());
+                    updatePo.setLevel(agentPo.getLevel());
+                    agentDAO.updateAgent(agentPo);
                 }
             });
         });
