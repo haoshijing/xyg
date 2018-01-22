@@ -40,4 +40,7 @@ public class AgentVo {
      */
     private String isAward;
     CashPo cashPo;
+
+    private String alipayAccout;
+    private String wechartAccout;
 }

@@ -99,6 +99,8 @@ public class AdminAgentReadService {
         List<AgentPo> agentPos = agentService.selectList(queryAgentPo);
         List<AgentVo> agentVos = agentPos.stream().map(eachAgentPo -> {
             AgentVo agentVo = new AgentVo();
+            agentVo.setAlipayAccout(eachAgentPo.getAlipayAccout());
+            agentVo.setWechartAccout(eachAgentPo.getWechartAccout());
             agentVo.setGameId(eachAgentPo.getPlayerId());
             agentVo.setName(eachAgentPo.getAgentName());
             agentVo.setType(eachAgentPo.getLevel());
@@ -442,6 +444,8 @@ public class AdminAgentReadService {
         AgentPo agentPo = agentService.findByGuid(areaAgentGuid);
         agentMyInfo.setLevel(agentPo.getLevel());
         if(agentPo != null) {
+            agentMyInfo.setAlipayAccout(agentPo.getAlipayAccout());
+            agentMyInfo.setWechartAccout(agentPo.getWechartAccout());
             AgentExtPo agentExtPo = agentExtDAO.selectByAgentId(agentPo.getId(),week);
             if(agentExtPo != null && agentExtPo.getAddCount()!= null){
                 agentMyInfo.setAddCount(agentExtPo.getAddCount());
@@ -489,5 +493,14 @@ public class AdminAgentReadService {
         QueryAgentReward queryAgentReward = new QueryAgentReward();
         queryAgentReward.setGuid(areaAgentGuid);
         return agentRewardDAO.selectList(queryAgentReward);
+    }
+
+    public void updateAgent(Integer areaAgentGuid, String alipayAccount, String wechartAccount) {
+
+        AgentPo agentPo = new AgentPo();
+        agentPo.setPlayerId(areaAgentGuid);
+        agentPo.setAlipayAccout(alipayAccount);
+        agentPo.setWechartAccout(wechartAccount);
+        agentService.updateAgent(agentPo);
     }
 }

@@ -21,4 +21,6 @@ public class AgentPo {
     private String password;
     private String avatar;
     private Integer isNeedAreaCal;
+    private String alipayAccout;
+    private String  wechartAccout;
 }

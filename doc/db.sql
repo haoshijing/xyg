@@ -97,6 +97,9 @@ insertTime bigint comment '写入时间',
 lastUpdateTime bigint comment '最后修改时间'
  ) comment '代理表';
 
+alter table t_agent add column alipayAccout varchar(200) comment '支付宝账号' default '';
+alter table t_agent add column wechartAccout varchar(200) comment '微信提款账号' default '';
+
 drop TABLE IF EXISTS t_agent_ext;
 create table t_agent_ext(
 id int primary key auto_increment comment '主键id',

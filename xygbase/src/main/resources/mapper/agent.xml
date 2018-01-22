@@ -100,6 +100,12 @@
           <if test = "param.memo != null">
               memo = #{param.memo},
           </if>
+          <if test = "param.alipayAccout != null">
+              alipayAccout = #{param.alipayAccout},
+          </if>
+          <if test = "param.wechartAccout != null">
+              wechartAccout = #{param.wechartAccout},
+          </if>
       </set>
         <where>
         <if test ="param.playerId != null">

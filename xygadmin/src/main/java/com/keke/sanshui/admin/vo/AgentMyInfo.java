@@ -10,4 +10,6 @@ public class AgentMyInfo {
     private Integer cardCount;
     private Integer level;
     private Integer guid;
+    private String wechartAccout;
+    private String alipayAccout;
 }
