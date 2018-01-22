@@ -162,6 +162,8 @@ public class FullSyncDataService {
                     AgentPo updatePo = new AgentPo();
                     updatePo.setId(queryPo.getId());
                     updatePo.setLevel(agentPo.getLevel());
+                    updatePo.setAgentName(agentPo.getAgentName());
+                    updatePo.setStatus(agentPo.getStatus());
                     agentDAO.updateAgent(agentPo);
                 }
             });

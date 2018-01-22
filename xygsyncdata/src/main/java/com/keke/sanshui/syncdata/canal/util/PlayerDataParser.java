@@ -122,12 +122,13 @@ public class PlayerDataParser {
                     AgentPo agentPo = new AgentPo();
                     agentPo.setInsertTime(System.currentTimeMillis());
                     agentPo.setLastUpdateTime(System.currentTimeMillis());
-                    agentPo.setStatus(2);
+                    agentPo.setStatus(1);
                     agentPo.setLevel(3);
                     agentPo.setLevel(level);
                     agentPo.setAgentWeChartNo(name);
                     agentPo.setAgentNickName(otherName);
                     agentPo.setMemo("");
+                    agentPo.setAgentName(String.valueOf(guid.intValue()));
                     agentPo.setParentId(0);
                     agentPo.setPlayerId(guid.intValue());
                     agentPos.add(agentPo);
