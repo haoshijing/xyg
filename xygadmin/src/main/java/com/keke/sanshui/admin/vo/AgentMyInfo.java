@@ -8,4 +8,6 @@ public class AgentMyInfo {
     private Integer goldCount;
     private Integer diamondCount;
     private Integer cardCount;
+    private Integer level;
+    private Integer guid;
 }

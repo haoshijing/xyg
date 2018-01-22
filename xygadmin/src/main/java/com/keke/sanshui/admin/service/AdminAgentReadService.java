@@ -430,15 +430,17 @@ public class AdminAgentReadService {
         return 0L;
     }
 
-    public AgentMyInfo queryMyInfo(Integer areaAgentGuid) {
+    public AgentMyInfo queryMyInfo(Integer areaAgentGuid){
         AgentMyInfo agentMyInfo = new AgentMyInfo();
         PlayerCouponPo couponPo = playerCouponService.selectByPlayerId(areaAgentGuid);
         agentMyInfo.setCardCount(couponPo.getCardCount());
         agentMyInfo.setDiamondCount(couponPo.getDiamondCount());
         agentMyInfo.setGoldCount(couponPo.getGoldCount());
+        agentMyInfo.setGuid(areaAgentGuid);
         Integer week = WeekUtil.getCurrentWeek();
 
         AgentPo agentPo = agentService.findByGuid(areaAgentGuid);
+        agentMyInfo.setLevel(agentPo.getLevel());
         if(agentPo != null) {
             AgentExtPo agentExtPo = agentExtDAO.selectByAgentId(agentPo.getId(),week);
             if(agentExtPo != null && agentExtPo.getAddCount()!= null){
