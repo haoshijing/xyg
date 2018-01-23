@@ -1,6 +1,7 @@
 package com.keke.sanshui.syncdata.canal.full;
 
 import com.alibaba.druid.pool.DruidDataSource;
+import com.alibaba.fastjson.JSON;
 import com.keke.sanshui.base.admin.dao.AgentDAO;
 import com.keke.sanshui.base.admin.dao.AgentRewardDAO;
 import com.keke.sanshui.base.admin.dao.PlayerRelationDAO;
@@ -9,9 +10,11 @@ import com.keke.sanshui.base.admin.po.PlayerRelationPo;
 import com.keke.sanshui.base.admin.po.agent.AgentPo;
 import com.keke.sanshui.base.admin.po.agent.AgentReward;
 import com.keke.sanshui.base.admin.service.PlayerService;
+import com.keke.sanshui.base.util.MD5Util;
 import com.keke.sanshui.syncdata.canal.util.PlayerDataParser;
 import io.netty.util.concurrent.DefaultThreadFactory;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.embedded.EmbeddedServletContainerInitializedEvent;
@@ -62,6 +65,10 @@ public class FullSyncDataService {
 
     @Value("${sync.db.password}")
     private String syncDbPassword;
+
+
+    @Value("${saltEncrypt}")
+    private String saltEncrypt;
 
     private static final String PLAYER_ID = "guid";
 
@@ -159,12 +166,21 @@ public class FullSyncDataService {
                         log.error("{}", e);
                     }
                 }else{
-                    AgentPo updatePo = new AgentPo();
-                    updatePo.setId(queryPo.getId());
-                    updatePo.setLevel(agentPo.getLevel());
-                    updatePo.setAgentName(agentPo.getAgentName());
-                    updatePo.setStatus(agentPo.getStatus());
-                    agentDAO.updateAgent(agentPo);
+                    try {
+                        log.info("update Po {}", JSON.toJSONString(agentPo));
+                        AgentPo updatePo = new AgentPo();
+                        updatePo.setId(queryPo.getId());
+                        updatePo.setLevel(agentPo.getLevel());
+                        updatePo.setAgentName(agentPo.getAgentName());
+                        if(StringUtils.isEmpty(agentPo.getPassword())){
+                            String encryptPwd = MD5Util.md5(MD5Util.md5("xianyugou") + saltEncrypt);
+                            agentPo.setPassword(encryptPwd);
+                        }
+                        updatePo.setStatus(agentPo.getStatus());
+                        agentDAO.updateAgent(agentPo);
+                    }catch (Exception e){
+                        log.error("update Error {}",e);
+                    }
                 }
             });
         });

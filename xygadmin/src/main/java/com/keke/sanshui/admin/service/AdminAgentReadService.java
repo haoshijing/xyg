@@ -1,46 +1,46 @@
 package com.keke.sanshui.admin.service;
 
 
-        import com.google.common.collect.Lists;
-        import com.keke.sanshui.admin.agent.response.UnderAgentResponseVo;
-        import com.keke.sanshui.admin.agent.response.UnderProxyVo;
-        import com.keke.sanshui.admin.auth.AdminAuthCacheService;
-        import com.keke.sanshui.admin.request.agent.AgentQueryVo;
-        import com.keke.sanshui.admin.request.player.PlayerQueryVo;
-        import com.keke.sanshui.admin.response.agent.AgentExportVo;
-        import com.keke.sanshui.admin.response.agent.UnderAgentVo;
-        import com.keke.sanshui.admin.response.agent.UnderPlayerVo;
-        import com.keke.sanshui.admin.util.CSVUtils;
-        import com.keke.sanshui.admin.vo.AgentMyInfo;
-        import com.keke.sanshui.admin.vo.AgentOrderVo;
-        import com.keke.sanshui.admin.vo.AgentVo;
-        import com.keke.sanshui.base.admin.dao.*;
-        import com.keke.sanshui.base.admin.po.*;
-        import com.keke.sanshui.base.admin.po.agent.*;
-        import com.keke.sanshui.base.admin.po.order.Order;
-        import com.keke.sanshui.base.admin.po.order.QueryOrderPo;
-        import com.keke.sanshui.base.admin.service.AgentService;
-        import com.keke.sanshui.base.admin.service.PlayerCouponService;
-        import com.keke.sanshui.base.util.MD5Util;
-        import com.keke.sanshui.base.util.WeekUtil;
-        import lombok.extern.slf4j.Slf4j;
-        import org.apache.commons.lang3.StringUtils;
-        import org.apache.commons.lang3.tuple.Pair;
-        import org.springframework.beans.factory.annotation.Autowired;
-        import org.springframework.beans.factory.annotation.Value;
-        import org.springframework.stereotype.Repository;
-        import org.springframework.util.CollectionUtils;
+import com.google.common.collect.Lists;
+import com.keke.sanshui.admin.agent.response.UnderAgentResponseVo;
+import com.keke.sanshui.admin.agent.response.UnderProxyVo;
+import com.keke.sanshui.admin.auth.AdminAuthCacheService;
+import com.keke.sanshui.admin.request.agent.AgentQueryVo;
+import com.keke.sanshui.admin.request.player.PlayerQueryVo;
+import com.keke.sanshui.admin.response.agent.AgentExportVo;
+import com.keke.sanshui.admin.response.agent.UnderAgentVo;
+import com.keke.sanshui.admin.response.agent.UnderPlayerVo;
+import com.keke.sanshui.admin.util.CSVUtils;
+import com.keke.sanshui.admin.vo.AgentMyInfo;
+import com.keke.sanshui.admin.vo.AgentOrderVo;
+import com.keke.sanshui.admin.vo.AgentVo;
+import com.keke.sanshui.base.admin.dao.*;
+import com.keke.sanshui.base.admin.po.*;
+import com.keke.sanshui.base.admin.po.agent.*;
+import com.keke.sanshui.base.admin.po.order.Order;
+import com.keke.sanshui.base.admin.po.order.QueryOrderPo;
+import com.keke.sanshui.base.admin.service.AgentService;
+import com.keke.sanshui.base.admin.service.PlayerCouponService;
+import com.keke.sanshui.base.util.MD5Util;
+import com.keke.sanshui.base.util.WeekUtil;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Repository;
+import org.springframework.util.CollectionUtils;
 
-        import javax.servlet.http.HttpServletResponse;
-        import java.io.File;
-        import java.io.FileInputStream;
-        import java.io.OutputStream;
-        import java.text.SimpleDateFormat;
-        import java.util.Arrays;
-        import java.util.Date;
-        import java.util.List;
-        import java.util.UUID;
-        import java.util.stream.Collectors;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Repository
 @Slf4j
@@ -151,15 +151,15 @@ public class AdminAgentReadService {
         }).map(agentVo -> {
             Integer agentId = agentVo.getAgentId();
             AgentExtPo agentExtPo = agentExtDAO.selectByAgentId(agentId, week);
-            if(agentExtPo != null){
+            if (agentExtPo != null) {
                 Integer isAward = agentExtPo.getIsAward();
-                if(isAward == 1){
+                if (isAward == 1) {
                     agentVo.setIsAward("已领取");
-                }else{
+                } else {
                     agentVo.setIsAward("未领取");
                 }
                 agentVo.setAddCount(agentExtPo.getAddCount());
-            }else{
+            } else {
                 agentVo.setIsAward("未领取");
                 agentVo.setAddCount(0);
             }
@@ -169,7 +169,7 @@ public class AdminAgentReadService {
             cashQueryPo.setStatus(1);
             cashQueryPo.setAgentId(agentVo.getAgentId());
             List<CashPo> cashPos = cashDAO.selectList(cashQueryPo);
-            if(!CollectionUtils.isEmpty(cashPos)){
+            if (!CollectionUtils.isEmpty(cashPos)) {
                 agentVo.setCashPo(cashPos.get(0));
             }
             return agentVo;
@@ -216,7 +216,7 @@ public class AdminAgentReadService {
         }).collect(Collectors.toList());
     }
 
-    public List<UnderAgentVo> obtainUnderAgent(Integer agentId,Integer week) {
+    public List<UnderAgentVo> obtainUnderAgent(Integer agentId, Integer week) {
         AgentQueryPo agentQueryPo = new AgentQueryPo();
         agentQueryPo.setParentId(agentId);
         agentQueryPo.setStatus(1);
@@ -419,20 +419,20 @@ public class AdminAgentReadService {
 
         if (agentPo != null) {
             AgentPickTotalPo agentPickTotalPo = agentPickTotalDAO.selectByAgentId(agentPo.getId(), week);
-            if(agentPickTotalPo != null) {
+            if (agentPickTotalPo != null) {
                 underAgentResponseVo.setWeekAgentPickTotal(agentPickTotalPo.getTotalUnderMoney());
                 AgentQueryPo agentQueryPo = new AgentQueryPo();
                 agentQueryPo.setParentId(agentPo.getId());
                 Long count = agentService.selectCount(agentQueryPo);
                 return count;
-            }else{
-                log.warn(" agentId = {}",agentPo.getId());
+            } else {
+                log.warn(" agentId = {}", agentPo.getId());
             }
         }
         return 0L;
     }
 
-    public AgentMyInfo queryMyInfo(Integer areaAgentGuid){
+    public AgentMyInfo queryMyInfo(Integer areaAgentGuid) {
         AgentMyInfo agentMyInfo = new AgentMyInfo();
         PlayerCouponPo couponPo = playerCouponService.selectByPlayerId(areaAgentGuid);
         agentMyInfo.setCardCount(couponPo.getCardCount());
@@ -443,25 +443,25 @@ public class AdminAgentReadService {
 
         AgentPo agentPo = agentService.findByGuid(areaAgentGuid);
         agentMyInfo.setLevel(agentPo.getLevel());
-        if(agentPo != null) {
+        if (agentPo != null) {
             agentMyInfo.setGuid(areaAgentGuid);
             agentMyInfo.setAlipayAccout(agentPo.getAlipayAccout());
             agentMyInfo.setWechartAccout(agentPo.getWechartAccout());
-            AgentExtPo agentExtPo = agentExtDAO.selectByAgentId(agentPo.getId(),week);
-            if(agentExtPo != null && agentExtPo.getAddCount()!= null){
+            AgentExtPo agentExtPo = agentExtDAO.selectByAgentId(agentPo.getId(), week);
+            if (agentExtPo != null && agentExtPo.getAddCount() != null) {
                 agentMyInfo.setAddCount(agentExtPo.getAddCount());
-            }else{
+            } else {
                 agentMyInfo.setAddCount(0);
             }
-        }else{
+        } else {
             agentMyInfo.setAddCount(0);
         }
         return agentMyInfo;
     }
 
     public Integer getWeekAddCount(Integer playerId, Integer week) {
-        AgentExtPo agentExtPo =   agentExtDAO.selectByAgentId(playerId,week);
-        return  agentExtPo != null ? agentExtPo.getAddCount() : 0;
+        AgentExtPo agentExtPo = agentExtDAO.selectByAgentId(playerId, week);
+        return agentExtPo != null ? agentExtPo.getAddCount() : 0;
     }
 
     public List<AgentOrderVo> queryMyOrderList(Integer areaAgentGuid, Long maxId) {
@@ -471,19 +471,19 @@ public class AdminAgentReadService {
         queryOrderPo.setOffset(0);
         queryOrderPo.setClientGuids(Lists.newArrayList(areaAgentGuid));
 
-        List<Order> orders  = orderDAO.selectList(queryOrderPo);
+        List<Order> orders = orderDAO.selectList(queryOrderPo);
         return orders.stream().map(order -> {
             AgentOrderVo agentOrderVo = new AgentOrderVo();
             agentOrderVo.setMoney(order.getPrice());
             agentOrderVo.setId(order.getId());
             agentOrderVo.setOrderId(order.getSelfOrderNo());
-            agentOrderVo.setTitle(order.getMoney()+"房卡");
+            agentOrderVo.setTitle(order.getMoney() + "房卡");
             agentOrderVo.setOrderTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(order.getInsertTime()));
-            if(order.getOrderStatus() == 2) {
+            if (order.getOrderStatus() == 2) {
                 agentOrderVo.setPayStatus("支付成功");
-            }else if(order.getOrderStatus() == 1){
+            } else if (order.getOrderStatus() == 1) {
                 agentOrderVo.setPayStatus("未支付");
-            }else{
+            } else {
                 agentOrderVo.setPayStatus("支付失败");
             }
             return agentOrderVo;
