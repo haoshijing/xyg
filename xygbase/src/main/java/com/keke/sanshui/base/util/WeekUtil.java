@@ -39,7 +39,7 @@ public final class WeekUtil {
         return dateTime.plusWeeks(week-1).getMillis();
     }
     public static long getWeekEndTimestamp(int week){
-        DateTime dateTime = new DateTime(2017,1,14,23,59,59);
+        DateTime dateTime = new DateTime(2018,1,14,23,59,59);
         return dateTime.plusWeeks(week-1).getMillis();
     }
     public static long getWeekStartTimestamp(){
