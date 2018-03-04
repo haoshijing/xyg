@@ -69,17 +69,6 @@ public class IndexService {
         }).sum();
         pickDataResponse.setSuccessCount(orderList.size());
         pickDataResponse.setDaySuccessTotal(Long.valueOf(sum/100));
-        QueryOrderPo newQueryPo = new QueryOrderPo();
-        newQueryPo.setStartTimestamp(TimeUtil.getDayStartTimestamp(day));
-        newQueryPo.setEndTimestamp(TimeUtil.getDayEndTimestamp(day));
-        newQueryPo.setLimit(10000);
-        newQueryPo.setOffset(0);
-        orderList = orderService.selectList(newQueryPo);
-        int sumTotal = orderList.stream().mapToInt(order->{
-            return Integer.valueOf(order.getPrice());
-        }).sum();
-        pickDataResponse.setDayPickTotal(Long.valueOf(sumTotal/100));
-        pickDataResponse.setSuccessCount(orderList.size());
         return pickDataResponse;
     }
 
