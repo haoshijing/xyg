@@ -105,7 +105,9 @@ public class PlayerDataParser {
                 int level = 0;
                 if (curPlayerVersion >= 5) {
                     level = byteBuf.readIntLE();
-
+                }
+                if (curPlayerVersion >= 6){
+                    String selfieDate = readString(byteBuf);
                 }
                 PlayerRelationPo playerRelationPo = new PlayerRelationPo();
                 playerRelationPo.setParentPlayerId(invitedGuid.intValue());
