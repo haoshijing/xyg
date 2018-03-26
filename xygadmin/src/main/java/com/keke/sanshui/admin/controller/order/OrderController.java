@@ -3,9 +3,11 @@ package com.keke.sanshui.admin.controller.order;
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
 import com.keke.sanshui.admin.request.order.OrderQueryVo;
+import com.keke.sanshui.admin.request.order.OrderTotalQueryVo;
 import com.keke.sanshui.admin.response.ApiResponse;
 import com.keke.sanshui.admin.response.RetCode;
 import com.keke.sanshui.admin.response.order.OrderItemVo;
+import com.keke.sanshui.admin.response.order.OrderTotalResponse;
 import com.keke.sanshui.admin.service.order.AdminOrderReadService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,7 @@ public class OrderController {
     @Autowired
     private AdminOrderReadService adminOrderReadService;
 
+
     @RequestMapping("/list")
     @ResponseBody
     public ApiResponse<List<OrderItemVo>> queryList(@RequestBody OrderQueryVo orderQueryVo){
@@ -32,6 +35,16 @@ public class OrderController {
         }catch (Exception e){
             log.error("queryList error {}", JSON.toJSONString(orderQueryVo),e);
             return new ApiResponse<>(RetCode.SERVER_ERROR,e.getMessage(), Lists.newArrayList());
+        }
+    }
+
+    public ApiResponse<OrderTotalResponse> queryOrderTotal(@RequestBody OrderTotalQueryVo orderTotalQueryVo){
+        try{
+            OrderTotalResponse response = adminOrderReadService.queryOrderTotal(orderTotalQueryVo);
+            return new ApiResponse<>(response);
+        }catch (Exception e){
+            log.error("queryOrderTotal error {}",JSON.toJSONString(orderTotalQueryVo));
+            return new ApiResponse<>(RetCode.SERVER_ERROR,e.getMessage(),  null);
         }
     }
 

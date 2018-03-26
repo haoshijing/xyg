@@ -2,7 +2,9 @@ package com.keke.sanshui.admin.service.order;
 
 import com.google.common.collect.Lists;
 import com.keke.sanshui.admin.request.order.OrderQueryVo;
+import com.keke.sanshui.admin.request.order.OrderTotalQueryVo;
 import com.keke.sanshui.admin.response.order.OrderItemVo;
+import com.keke.sanshui.admin.response.order.OrderTotalResponse;
 import com.keke.sanshui.base.admin.po.order.Order;
 import com.keke.sanshui.base.admin.po.order.QueryOrderPo;
 import com.keke.sanshui.base.admin.service.OrderService;
@@ -67,5 +69,15 @@ public class AdminOrderReadService {
         }
         queryOrderPo.setOffset(page * queryOrderPo.getLimit());
         return queryOrderPo;
+    }
+
+    public Long queryOrderTotal(OrderTotalQueryVo orderTotalQueryVo) {
+        Long start = orderTotalQueryVo.getStart();
+        Long end = orderTotalQueryVo.getEnd();
+        Long sum = orderService.queryPickupSum(null, start, end);
+        if(sum == null){
+            sum = 0L;
+        }
+        return  sum;
     }
 }

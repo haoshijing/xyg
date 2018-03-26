@@ -98,10 +98,16 @@
         where selfOrderNo = #{order.selfOrderNo}
     </update>
 
+
     <select id="queryPickupSum" resultType="java.lang.Long">
         select sum(price) from t_order
-        where clientGuid = #{guid} and orderStatus = 2
-        and lastUpdateTime BETWEEN #{startTimestamp} AND #{endTimestamp}
+        <where>
+            orderStatus = 2 AND
+            lastUpdateTime BETWEEN #{startTimestamp} AND #{endTimestamp}
+            <if test = "guid != null">
+                clientGuid = #{guid}
+            </if>
+        </where>
     </select>
 
     <select id="selectList" parameterType="QueryOrderPo" resultType="Order">
